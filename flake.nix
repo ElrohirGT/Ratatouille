@@ -94,6 +94,7 @@
       default = pkgs.mkShell {
         packages = with pkgs; [
           sqlfluff
+          docker
         ];
       };
     });
