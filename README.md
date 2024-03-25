@@ -15,3 +15,10 @@ devenv up
 Recuerda que debes estar dentro de la consola de desarrollador descrita anteriormente.
 
 Si alguna vez los scripts dentro de `db` cambian, debes borrar la carpeta `.devenv/postgres` y volver a hacer `devenv up`.
+
+Para automatizar este proceso se creó el comando:
+```bash
+nix run .#restartServices
+```
+
+Por favor recuerda correr este comando estando en la carpeta root del directorio, no importa si ya corriste `nix develop --impure` antes puesto que este comando lo corre por tí!
