@@ -87,13 +87,7 @@
                 enable = true;
                 listen_addresses = "127.0.0.1";
                 port = 5566;
-                # initialScript = dbInitFile;
-                initialDatabases = [
-                  {
-                    name = "ratatouille_db";
-                    schema = ./db/tables.sql;
-                  }
-                ];
+                initialScript = dbInitFile;
                 settings = {
                   log_connections = true;
                   log_statement = "all";
