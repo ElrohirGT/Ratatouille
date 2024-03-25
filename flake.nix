@@ -1,43 +1,42 @@
 {
-  description = "Ratatouille flake";
+  description = "Ratatouille flake for reproducible environments and builds!";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    systems.url = "github:nix-systems/default";
+    devenv = {
+      url = "github:cachix/devenv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  nixConfig = {
+    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
+    extra-substituters = "https://devenv.cachix.org";
   };
 
   outputs = {
     self,
     nixpkgs,
-  }: let
-    forAllSystems = function:
-      nixpkgs.lib.genAttrs [
-        "x86_64-linux"
-        "x86_64-macos"
-        "aarch64-linux"
-        "aarch64-darwin"
-      ] (system:
-        function {
-          pkgs = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-            overlays = [
-              #inputs.something.overlays.default
-            ];
-          };
-          system = system;
-        });
+    devenv,
+    systems,
+  } @ inputs: let
+    forEachSystem = nixpkgs.lib.genAttrs (import systems);
     dbImageName = "ratatouille_db_image";
     dbImageTag = "current";
-    dbContainerName = "ratatouille_postgres";
   in {
-    packages = forAllSystems ({
-      pkgs,
-      system,
-    }: {
+    packages = forEachSystem (system: let
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      dervFromDBFile = file: pkgs.writeTextDir "docker-entrypoint-initdb.d/${file}" (builtins.readFile ./db/${file});
+      dbInitFile = dervFromDBFile "tables.sql";
+    in {
+      devenv-up = self.devShells.${system}.default.config.procfileScript;
       dbDocker = pkgs.dockerTools.buildImage {
         name = dbImageName;
         tag = dbImageTag;
-        created = "now";
         fromImage = pkgs.dockerTools.pullImage {
           imageName = "postgres";
           # Obtained using `nix run nixpkgs#nix-prefetch-docker -- --image-name postgres --image-tag 16`
@@ -49,15 +48,11 @@
           finalImageTag = "16";
         };
 
-        copyToRoot = let
-          makeDerFromFile = file: pkgs.writeTextDir "docker-entrypoint-initdb.d/${file}" (builtins.readFile ./db/${file});
-          dbInitscript = makeDerFromFile "tables.sql";
-        in
-          pkgs.buildEnv {
-            name = "image-root";
-            paths = [dbInitscript];
-            pathsToLink = ["/docker-entrypoint-initdb.d"];
-          };
+        copyToRoot = pkgs.buildEnv {
+          name = "image-root";
+          paths = [dbInitFile];
+          pathsToLink = ["/docker-entrypoint-initdb.d"];
+        };
 
         config.Entrypoint = "/usr/local/bin/docker-entrypoint.sh";
         config.Cmd = ["postgres"];
@@ -65,37 +60,52 @@
           "POSTGRES_PASSWORD=myPassword"
         ];
       };
-      restartDBDocker = let
-        appName = "restartRatatouilleDBDocker";
-      in
-        pkgs.writeShellApplication {
-          name = appName;
-          text = ''
-            echo WARNING: This command should be executed inside the root of the project!
-            docker stop ${dbContainerName} || true # Ignore error, since we can't guarantee the container was running
-            docker rm ${dbContainerName} || true # Ignore error, since we can't guarantee the container already existed before
-            docker rmi ${dbImageName}:${dbImageTag} || true # Ignore error, since we can't guarantee the image exists
+    });
 
-            if nix build .#dbDocker && docker load < result; then
-            	set -o allexport
-            	# shellcheck disable=SC1091
-            	. .env
-            	set +o allexport
-            	docker run -d --name ${dbContainerName} -p "''$DB_PORT":5432 ${dbImageName}:${dbImageTag}
-            fi
-          '';
+    devShells = forEachSystem (
+      system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
         };
-    });
+        strFromDBFile = file: builtins.readFile ./db/${file};
+        dbInitFile = strFromDBFile "tables.sql";
+      in {
+        default = devenv.lib.mkShell {
+          inherit inputs pkgs;
+          modules = [
+            {
+              packages = with pkgs; [
+                sqlfluff
+                go
+              ];
 
-    devShells = forAllSystems ({
-      pkgs,
-      system,
-    }: {
-      default = pkgs.mkShell {
-        packages = with pkgs; [
-          sqlfluff
-        ];
-      };
-    });
+              # Enable .env integration
+              dotenv.enable = true;
+
+              services.postgres = {
+                enable = true;
+                listen_addresses = "127.0.0.1";
+                port = 5566;
+                # initialScript = dbInitFile;
+                initialDatabases = [
+                  {
+                    name = "ratatouille_db";
+                    schema = ./db/tables.sql;
+                  }
+                ];
+                settings = {
+                  log_connections = true;
+                  log_statement = "all";
+                  logging_collector = true;
+                  log_disconnections = true;
+                  log_destination = "stderr";
+                };
+              };
+            }
+          ];
+        };
+      }
+    );
   };
 }
