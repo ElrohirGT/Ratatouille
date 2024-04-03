@@ -32,11 +32,22 @@ foreign key (tipo) references tipoUsuario(id) on delete cascade);
 create table cuenta (id int references mesa(idMesa) on delete cascade not null,
 no_cuenta serial primary key, estaCerrada boolean, numPersonas int);
 
+create table cliente (id SERIAL primary key, nombre varchar (30), direccion varchar (30), nit varchar (30),
+unique(nombre, nit));
+
 create table queja (idCliente int references cliente(id) on delete cascade, gravedad int not null, motivo text not null, 
 fecha timestamp not null,
-idEmpleado integer references empleado (id) on delete cascade, idCliente integer references cliente (id) on delete cascade);
+idEmpleado integer references empleado (id) on delete cascade);
 
 create table estadosPedidos (id SERIAL primary key, nombre varchar(30));
+
+
+create table tipoPago (id SERIAL primary key, nombre varchar (30));
+
+create table itemMenuCategoria (id serial primary key, nombre varchar(30));
+
+create table itemMenu (id SERIAL primary key, nombre varchar (30), descripcion text, precioUnitario money, 
+categoria int references itemMenuCategoria(id) on delete cascade);
 
 create table pedidos (id serial primary key, fecha timestamp, 
 estado int references estadosPedidos(id) on delete cascade, cantidad int, 
@@ -44,22 +55,15 @@ no_cuenta int references cuenta(no_cuenta) on delete cascade,
 item int references itemMenu(id) on delete cascade 
 );
 
-create table tipoPago (id SERIAL primary key, nombre varchar (30));
+
+create table factura(no_factura serial primary key, fecha timestamp, 
+cuenta int references pedidos(id) on delete cascade,-- duda por que llamarla cuenta? 
+cliente int references cliente(id) on delete cascade);
 
 create table pago(tipo int references tipoPago(id) on delete cascade, monto float, 
 no_factura int references factura(no_factura) on delete cascade);
 
-create table itemMenuCategoria (id serial primary key, nombre varchar(30));
-
-create table itemMenu (id SERIAL primary key, nombre varchar (30), descripcion text, precioUnitario money, 
-categoria int references itemMenuCategoria(id) on delete cascade);
-
-create table factura(no_factura serial primary key, fecha timestamp, 
-cuenta int references pedidos(id) on delete cascade,-- duda por que llamarla cuenta? 
-cliente int references cluente(id) on delete cascade);
-
 create table encuesta (empleado int references empleado(id) on delete cascade, cliente int references cliente(id) on delete cascade,
 gradoAmabilidad int, gradoExactitud int, fecha timestamp);
 
-create table cliente (id SERIAL primary key, nombre varchar (30), direccion varchar (30), nit varchar (30),
-unique(nombre, nit));
+
