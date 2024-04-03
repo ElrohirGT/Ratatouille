@@ -91,6 +91,7 @@
               packages = with pkgs; [
                 sqlfluff
                 go
+                gnumake
               ];
 
               # Enable .env integration
