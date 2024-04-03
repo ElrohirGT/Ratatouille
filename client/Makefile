@@ -8,7 +8,15 @@ build:
 	GOARCH=amd64 GOOS=windows go build -o ./target/${BINARY_NAME}-windows ./cmd/Ratatouille/main.go
 
 run: build
-	./target/${BINARY_NAME}-linux
+    ifeq ($(shell uname), Darwin)
+		./target/${BINARY_NAME}-darwin
+    endif
+    ifeq ($(shell uname), Linux)
+		./target/${BINARY_NAME}-linux
+    endif
+    ifeq ($(shell uname), Windows_NT)
+		./target/${BINARY_NAME}-windows.exe
+    endif
 
 clean:
 	go clean
