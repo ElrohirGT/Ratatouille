@@ -67,3 +67,4 @@ create table encuesta (empleado int references empleado(id) on delete cascade, c
 gradoAmabilidad int, gradoExactitud int, fecha timestamp);
 
 
+
