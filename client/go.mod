@@ -1,3 +1,3 @@
-module github.com/elrohirGT/Ratatouille
+module github.com/ElrohirGT/Ratatouille
 
 go 1.21.7
