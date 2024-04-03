@@ -1,11 +1,11 @@
 package main
 
 import (
-    "fmt"
-    "github.com/elrohirGT/Ratatouille/internal/db"
+	"fmt"
+	"github.com/ElrohirGT/Ratatouille/internal/db"
 )
 
-func main(){
-    fmt.Println("Hello World")
-    db.Test()
+func main() {
+	fmt.Println("Hello World")
+	db.Test()
 }

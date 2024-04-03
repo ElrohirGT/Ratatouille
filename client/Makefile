@@ -17,7 +17,10 @@ clean:
 	rm ./target/${BINARY_NAME}-windows
 
 test:
-	go test ./...
+	go test -v ./...
+
+format:
+	gofmt -w .
 
 dep:
 	go mod download
