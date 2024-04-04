@@ -67,7 +67,7 @@
           echo -e "$(ansi yellow)"WARNING:"$(ansi reset)" This script must be run on the project root directory!
 
           echo "Trying to remove old .devenv..."
-          rm -r .devenv || true
+          rm .devenv || rm -r .devenv || true
 
           echo "Entering devshell..."
           nix develop --impure . -c devenv up
