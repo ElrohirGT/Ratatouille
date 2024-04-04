@@ -1,7 +1,7 @@
 CREATE ROLE postgres WITH LOGIN SUPERUSER;
 
 CREATE DATABASE ratatouille;
-\c ratatouille;
+\c ratatouille postgres;
 
 CREATE USER root WITH PASSWORD 'root';
 GRANT ALL PRIVILEGES ON DATABASE ratatouille TO root;
