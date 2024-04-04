@@ -12,7 +12,7 @@ GRANT CONNECT ON DATABASE ratatouille TO backend;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO backend;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO backend;
 
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON SEQUENCES TO backend;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, UPDATE ON SEQUENCES TO backend;
 
 create table area(id serial primary key,nombre varchar (30) not null, admiteMoverMesas boolean not null, 
 admiteFumadores boolean not null);
