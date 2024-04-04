@@ -24,6 +24,8 @@
     forEachSystem = nixpkgs.lib.genAttrs (import systems);
     dbImageName = "ratatouille_db_image";
     dbImageTag = "current";
+    postgresPort = 5566;
+    postgresHost = "127.0.0.1";
   in {
     packages = forEachSystem (system: let
       pkgs = import nixpkgs {
@@ -99,8 +101,8 @@
 
               services.postgres = {
                 enable = true;
-                listen_addresses = "127.0.0.1";
-                port = 5566;
+                listen_addresses = postgresHost;
+                port = postgresPort;
                 initialScript = dbInitFile;
                 settings = {
                   log_connections = true;
