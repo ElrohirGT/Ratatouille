@@ -68,11 +68,12 @@ create table cliente (
 );
 
 create table queja (
-	cliente int references cliente(id) on delete cascade,
+	cliente int references cliente(id) on delete cascade not null,
 	gravedad int not null,
 	motivo text not null,
 	fecha timestamp not null,
-	empleado integer references empleado (id) on delete cascade
+	empleado integer references empleado (id) on delete cascade,
+	item integer references itemMenu (id) on delete cascade
 );
 
 create table estadosPedidos (
