@@ -51,14 +51,6 @@ create table cliente (
 	unique(nombre, nit)
 );
 
-create table queja (
-	cliente int references cliente(id) on delete cascade not null,
-	gravedad int not null,
-	motivo text not null,
-	fecha timestamp not null,
-	empleado integer references empleado (id) on delete cascade,
-	item integer references itemMenu (id) on delete cascade
-);
 
 create table estadosPedidos (
 	id SERIAL primary key,
@@ -83,19 +75,28 @@ create table itemMenu (
 	categoria int references itemMenuCategoria(id) on delete cascade
 );
 
-create table pedidos (
+create table queja (
+	cliente int references cliente(id) on delete cascade not null,
+	gravedad int not null,
+	motivo text not null,
+	fecha timestamp not null,
+	empleado integer references empleado (id) on delete cascade,
+	item integer references itemMenu (id) on delete cascade
+);
+
+create table pedido (
 	id serial primary key,
 	fecha timestamp,
 	estado int references estadosPedidos(id) on delete cascade,
 	cantidad int,
-	numCuenta int references cuenta(numCuenta) on delete cascade,
+	cuenta int references cuenta(numCuenta) on delete cascade,
 	item int references itemMenu(id) on delete cascade 
 );
 
 create table factura(
 	numFactura serial primary key,
 	fecha timestamp,
-	cuenta int references cuenta(id) on delete cascade,
+	cuenta int references cuenta(numCuenta) on delete cascade,
 	cliente int references cliente(id) on delete cascade
 );
 

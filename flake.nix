@@ -84,7 +84,7 @@
           config.allowUnfree = true;
         };
         strFromDBFile = file: builtins.readFile ./db/${file};
-        dbInitFile = strFromDBFile "tables.sql";
+        dbInitFile = builtins.concatStringsSep "\n" [(strFromDBFile "setup.sql") (strFromDBFile "tables.sql")];
       in {
         default = devenv.lib.mkShell {
           inherit inputs pkgs;
