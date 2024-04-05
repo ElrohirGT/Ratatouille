@@ -1,7 +1,7 @@
 -- 1. Reporte de los platos más pedidos por los clientes en un rango de fechas solicitadas al usuario.
 
 -- name: GetMostFamousDishesBetween :many
-SELECT p.item, i.nombre, i.descripcion, COUNT(p)
+SELECT p.item, i.nombre, i.descripcion, COUNT(p) as count
 FROM pedidos p
 	RIGHT JOIN itemMenu i on p.item = i.id
 WHERE p.fecha BETWEEN $1 AND $2 
@@ -11,7 +11,7 @@ ORDER BY count DESC;
 -- 2. Horario en el que se ingresan más pedidos entre un rango de fechas solicitadas al usuario.
 
 -- name: GetRushHourBetween :one
-SELECT EXTRACT(hour from p.fecha) as horario, COUNT(*)
+SELECT EXTRACT(hour from p.fecha) as horario, COUNT(*) as count
 FROM pedidos p
 WHERE p.fecha BETWEEN $1 AND $2
 GROUP BY horario
@@ -36,7 +36,7 @@ GROUP BY numPersonas;
 -- name: GetComplaintsForEmployeeBetween :many
 SELECT *
 FROM queja 
-WHERE empleado = $1 AND fecha BETWEEN $2, $3;
+WHERE empleado = $1 AND fecha BETWEEN $2 AND $3;
 
 -- 5. Reporte de las quejas agrupadas por plato para un rango de fechas solicitadas al usuario.
 
@@ -63,4 +63,4 @@ FROM encuesta en
 WHERE 
 	em.puesto = 'Mesero' AND
 	en.fecha BETWEEN NOW() AND NOW() - interval '6 months'
-GROUP BY en.empleado, mes
+GROUP BY en.empleado, mes;
