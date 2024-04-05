@@ -22,3 +22,5 @@ nix run .#restartServices
 ```
 
 Por favor recuerda correr este comando estando en la carpeta root del directorio, no importa si ya corriste `nix develop --impure` antes puesto que este comando lo corre por tí!
+
+Se necesitan algunos queries de análisis de la data dentro de la aplicación, estos queries se pueden ver en el directorio `db`.
