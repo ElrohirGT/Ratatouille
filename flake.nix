@@ -94,6 +94,7 @@
                 sqlfluff
                 go
                 gnumake
+                sqlc
               ];
 
               # Enable .env integration
