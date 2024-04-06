@@ -80,8 +80,8 @@ create table queja (
 	gravedad int not null,
 	motivo text not null,
 	fecha timestamp not null,
-	empleado integer references empleado (id) on delete cascade not null,
-	item integer references itemMenu (id) on delete cascade not null
+	empleado integer references empleado (id) on delete cascade,
+	item integer references itemMenu (id) on delete cascade
 );
 
 create table pedido (
