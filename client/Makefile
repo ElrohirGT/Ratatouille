@@ -3,9 +3,9 @@ BINARY_NAME=ratatouille
 DEFAULT_GOAL:=run
 
 build:
-	GOARCH=amd64 GOOS=darwin go build -o ./target/${BINARY_NAME}-darwin ./cmd/Ratatouille/main.go
-	GOARCH=amd64 GOOS=linux go build -o ./target/${BINARY_NAME}-linux ./cmd/Ratatouille/main.go
-	GOARCH=amd64 GOOS=windows go build -o ./target/${BINARY_NAME}-windows ./cmd/Ratatouille/main.go
+	GOARCH=amd64 GOOS=darwin go build -o ./target/${BINARY_NAME}-darwin ./main.go
+	GOARCH=amd64 GOOS=linux go build -o ./target/${BINARY_NAME}-linux ./main.go
+	GOARCH=amd64 GOOS=windows go build -o ./target/${BINARY_NAME}-windows ./main.go
 
 run: build
     ifeq ($(shell uname), Darwin)
@@ -20,9 +20,7 @@ run: build
 
 clean:
 	go clean
-	rm ./target/${BINARY_NAME}-darwin
-	rm ./target/${BINARY_NAME}-linux
-	rm ./target/${BINARY_NAME}-windows
+	rm -rf ./target
 
 test:
 	go test -v ./...
