@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"github.com/ElrohirGT/Ratatouille/internal/tui"
 )
 
 func main() {
-	fmt.Println("Hello World")
+	user, password := tui.StartAuthentication()
+	
+	println(user, password)
 }
