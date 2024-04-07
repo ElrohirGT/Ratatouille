@@ -28,7 +28,7 @@ INSERT INTO empleado VALUES
 (default, 'Alfonzo Monzon', 1, 5),
 (default, 'Bartolome Chevez', 2, null),
 (default, 'Loudes Montiel', 3, null),
-(default, 'Juan Lopez', 3, null),
+(default, 'Jose Quinteros', 3, null),
 (default, 'Gabriel Otero', 3, NULL),
 (default, 'Diego Oliva', 3, null),
 (default, 'Maria Camacho', 3, null),
@@ -92,7 +92,7 @@ INSERT INTO usuario VALUES
 ('Juan Lopez', 'ratatouille1234', 1),
 ('Maria Melendez', 'ratatouille1234', 1),
 ('Gabriel Otero', 'ratatouille1234', 2),
-('Juan Lopez', 'ratatouille1234', 2),
+('Jose Quinteros', 'ratatouille1234', 2),
 ('Alfonso Portillo', 'ratatouille1234', 3),
 ('Gema Echeverria', 'ratatouille1234', 3),
 ('Bartolome Chevez', 'ratatouille1234', 4);
@@ -183,6 +183,8 @@ INSERT INTO queja VALUES
 (6, 4, 'Me hablo mal el mesero', now(), 5, null),
 (7, 2, 'El gerente no se preocupa por sus clientes', now(), 11, null),
 (8, 3, 'Pedí bebida fría y me ha llegado caliente', now(), 19, 4);
+
+
 
 
 -- Inserts para la tabla 'pedido'
