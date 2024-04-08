@@ -6,7 +6,6 @@ import (
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/views/analyst"
-	"github.com/ElrohirGT/Ratatouille/ratatuilledb"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -14,13 +13,13 @@ func main() {
 
 	// Driver initialization
 
-	dbConnection, err := db.New("root", "root", "ratatouille")
+	dbConnection, err := db.NewDriver("root", "root", "ratatouille")
 
 	if err != nil {
 		println("Something wrong with the Database...")
 		return
 	}
-	driver := ratatuilledb.New(dbConnection)
+	driver := db.New(dbConnection)
 	
 	println(driver)
 
