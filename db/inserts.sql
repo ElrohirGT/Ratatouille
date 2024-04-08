@@ -42,7 +42,7 @@ INSERT INTO empleado VALUES
 
 -- Inserts para la tabla 'mesa'
 INSERT INTO mesa VALUES 
-(default, 1, 2),
+(default, 1, 2),    
 (default, 1, 2),
 (default, 1, 4),
 (default, 1, 4),
@@ -140,11 +140,9 @@ INSERT INTO cliente VALUES
 
 -- Inserts para la tabla 'estadosPedidos'
 INSERT INTO estadosPedidos VALUES 
-(default, 'En espera'),
+(default, 'Pedido'),
 (default, 'En preparación'),
-(default, 'Cocinado'),
-(default, 'Entregado'),
-(default, 'Cancelado');
+(default, 'Entregado');
 
 
 -- Inserts para la tabla 'tipoPago'
@@ -175,43 +173,43 @@ INSERT INTO itemMenu VALUES
 
 -- Inserts para la tabla 'queja'
 INSERT INTO queja VALUES 
-(1, 3, 'Comida fría', now(), 12, 2),
-(2, 5, 'Mal servicio', now(), 10, 1),
-(3, 1, 'Plato equivocado', now(), 3, 3), --cambiar queja.empleado y .item a que puedan ser valores nulos 
-(4, 1, 'Mesa en mal estado', now(), null, null),
-(5, 3, 'Entrega de comida muy tardada', now(), null, null),
-(6, 4, 'Me hablo mal el mesero', now(), 5, null),
-(7, 2, 'El gerente no se preocupa por sus clientes', now(), 11, null),
-(8, 3, 'Pedí bebida fría y me ha llegado caliente', now(), 19, 4);
+(1, 3, 'Comida fría', '2024/01/16 14:31:50', 12, 2),
+(2, 5, 'Mal servicio', '2024/01/18 13:26:12', 10, 1),
+(3, 1, 'Plato equivocado', '2024/01/19 14:41:16', 3, 3), --cambiar queja.empleado y .item a que puedan ser valores nulos 
+(4, 1, 'Mesa en mal estado', '2024/01/20 14:39:32', null, null),
+(5, 3, 'Entrega de comida muy tardada', '2024/07/21 14:38:32', null, null),
+(6, 4, 'Me hablo mal el mesero', '2024/01/20 13:34:24', 5, null),
+(7, 2, 'El gerente no se preocupa por sus clientes', '2024/09/28 14:32:24', 11, null),
+(8, 3, 'Pedí bebida fría y me ha llegado caliente', '2024/11/27 15:56:25', 19, 4);
 
 
 
 
 -- Inserts para la tabla 'pedido'
 INSERT INTO pedido VALUES 
-(default, Now(), 1, 2, 1, 1),
-(default, Now(), 4, 3, 2, 2),
-(default, Now(), 3, 4, 3, 3),
-(default, Now(), 4, 2, 4, 4),
-(default, Now(), 4, 1, 4, 9),
-(default, Now(), 4, 3, 8, 8),
-(default, Now(), 4, 4, 11, 5),
-(default, Now(), 4, 1, 12, 3),
-(default, Now(), 4, 1, 13, 2),
-(default, Now(), 2, 1, 6, 8),
-(default, Now(), 4, 1, 12, 4),
-(default, Now(), 4, 2, 14, 1);
+(default, '2024/01/15 13:00:52', 1, 2, 1, 1),
+(default, '2024/01/16 14:10:32', 3, 3, 2, 2),
+(default, '2024/01/17 15:11:54', 2, 4, 3, 3),
+(default, '2024/01/18 13:10:53', 3, 2, 4, 4),
+(default, '2024/01/18 13:10:54', 3, 1, 4, 9),
+(default, '2024/01/19 14:15:12', 3, 3, 8, 8),
+(default, '2024/01/20 13:19:16', 3, 4, 11, 5),
+(default, '2024/01/20 14:19:51', 3, 1, 12, 3),
+(default, '2024/01/21 15:12:12', 3, 1, 13, 2),
+(default, '2024/01/22 13:17:52', 1, 1, 6, 8),
+(default, '2024/01/20 14:19:52', 3, 1, 12, 4),
+(default, '2024/01/23 15:00:11', 3, 2, 14, 1);
 
 
 -- Inserts para la tabla 'factura'
 INSERT INTO factura VALUES 
-(default, now(), 2, 1),
-(default, now(), 4, 2),
-(default, now(), 8, 3),
-(default, now(), 11, 6),
-(default, now(), 12, 4),
-(default, now(), 13, 9),
-(default, now(), 14, 2);
+(default, '2024/01/16 14:30:50', 2, 1),
+(default, '2024/01/18 13:25:12', 4, 2),
+(default, '2024/01/19 14:40:16', 8, 3),
+(default, '2024/01/20 13:32:24', 11, 6),
+(default, '2024/01/20 14:38:32', 12, 4),
+(default, '2024/01/21 15:27:48', 13, 9),
+(default, '2024/01/23 15:28:19', 14, 2);
 
 
 -- Inserts para la tabla 'pago'
@@ -230,10 +228,10 @@ INSERT INTO pago VALUES
 
 -- Inserts para la tabla 'encuesta'
 INSERT INTO encuesta VALUES 
-(9, 1, 4, 4, now()),
-(10, 2, 3, 2, now()),
-(3, 3, 4, 1, now()),
-(5, 6, 1, 4, now()),
-(2, 4, 5, 4, now()),
-(1, 9, 5, 5, now()),
-(11, 7, 1, 3, now());
+(9, 1, 4, 4, '2024/01/16 14:31:49'),
+(10, 2, 3, 2, '2024/01/18 13:26:13'),
+(3, 3, 4, 1, '2024/01/19 14:41:20'),
+(5, 6, 1, 4, '2024/01/20 13:33:25'),
+(2, 4, 5, 4, '2024/01/20 14:39:33'),
+(1, 9, 5, 5, '2024/01/21 15:28:49'),
+(11, 7, 1, 3, '2024/01/23 15:29:20');
