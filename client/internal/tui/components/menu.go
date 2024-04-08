@@ -12,6 +12,7 @@ import (
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
 type MenuItem struct {
+	Index           int
 	ItemTitle       string
 	ItemDescription string
 }
@@ -50,9 +51,7 @@ func (m MenuModel) Init() tea.Cmd {
 func (m MenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		if msg.Type == tea.KeyCtrlC {
-			return m, tea.Quit
-		} else if msg.Type == tea.KeyEnter {
+		if msg.Type == tea.KeyEnter {
 			i, ok := m.list.SelectedItem().(MenuItem)
 			if ok {
 				m.FocusItem = i

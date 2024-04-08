@@ -6,6 +6,7 @@ require (
 	github.com/charmbracelet/bubbles v0.18.0
 	github.com/charmbracelet/bubbletea v0.25.0
 	github.com/charmbracelet/lipgloss v0.10.0
+	github.com/golang-collections/collections v0.0.0-20130729185459-604e922904d3
 	github.com/lib/pq v1.10.9
 )
 

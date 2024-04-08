@@ -2,31 +2,23 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
-	"github.com/ElrohirGT/Ratatouille/internal/tui/views/analyst"
-	tea "github.com/charmbracelet/bubbletea"
+	"github.com/ElrohirGT/Ratatouille/internal/tui"
 )
+
+var DB_Driver *db.Queries
 
 func main() {
 
-	// Driver initialization
-
-	dbConnection, err := db.NewDriver("root", "root", "ratatouille")
-
+	// Connection Initialization
+	dbConnection, err := db.NewDriver("backend", "backend", "ratatouille", "127.0.0.1", "5566")
 	if err != nil {
-		println("Something wrong with the Database...")
+		fmt.Println(err)
 		return
 	}
-	driver := db.New(dbConnection)
-	
-	println(driver)
+	// Driver Initialization
+	DB_Driver = db.New(dbConnection)
 
-	m := analyst.InitialModel()
-
-	if _, err := tea.NewProgram(m).Run(); err != nil {
-		fmt.Println("Error running program", err)
-		os.Exit(1)
-	}
+	tui.StartApp("encargado")
 }

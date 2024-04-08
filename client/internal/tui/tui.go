@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ElrohirGT/Ratatouille/internal/tui/views/analyst"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/views/auth"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -25,6 +26,18 @@ func StartAuthentication() (username string, password string, role string) {
 	return response.Username, response.Password, "role"
 }
 
-func StartApp() {
+func StartApp(role string) {
 
+	var m tea.Model
+	switch role {
+	case "encargado":
+		m = analyst.InitialModel()
+	default:
+		m = analyst.InitialModel()
+	}
+
+	if _, err := tea.NewProgram(m).Run(); err != nil {
+		fmt.Println("Error running program", err)
+		os.Exit(1)
+	}
 }
