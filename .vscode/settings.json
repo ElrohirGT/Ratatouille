@@ -1,0 +1,6 @@
+{
+    "[go]": {
+        "editor.formatOnSave": false
+    },
+    "explorer.compactFolders": true
+}

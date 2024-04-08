@@ -5,5 +5,5 @@ sql:
     schema: "db/tables.sql"
     gen:
       go:
-        package: "ratatuilledb"
-        out: "client/ratatuilledb"
+        package: "db"
+        out: "client/internal/db"
