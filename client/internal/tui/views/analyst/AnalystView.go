@@ -2,17 +2,19 @@ package analyst
 
 import (
 	"github.com/ElrohirGT/Ratatouille/internal/tui/components"
-	"github.com/ElrohirGT/Ratatouille/internal/tui/constants"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/golang-collections/collections/stack"
 )
 
-type sessionState int
+var ViewStack *stack.Stack = stack.New()
+
+type sessionState string
 
 const (
-	Main sessionState = iota
-	MostOrdersView
-	RushHourView
-	AverageTimeToEatView
+	Main                 sessionState = "/"
+	MostOrdersView       sessionState = "/most_orders"
+	RushHourView         sessionState = "/rush_hour"
+	AverageTimeToEatView sessionState = "/average_time_to_eat"
 )
 
 type AnalystModel struct {
@@ -26,20 +28,20 @@ type AnalystModel struct {
 
 func InitialModel() tea.Model {
 
-	constants.GetViewStack().Push(0)
+	ViewStack.Push(string(Main))
 
 	items := []components.MenuItem{
-		{Index: 1, ItemTitle: "Most ordered dishes", ItemDescription: "Between a date range"},
-		{Index: 2, ItemTitle: "Schedule in which there are more orders", ItemDescription: "Betweenn a date range"},
-		{Index: 3, ItemTitle: "Average eat time", ItemDescription: "Depending group of people"},
-		{Index: 4, ItemTitle: "Complains grouped by person", ItemDescription: "Between a data range"},
-		{Index: 5, ItemTitle: "Complains grouped by dish", ItemDescription: "Between a data range"},
-		{Index: 6, ItemTitle: "Waitress eficiency", ItemDescription: "Grouped by person, in the last 6 months"},
+		{Route: string(MostOrdersView), ItemTitle: "Most ordered dishes", ItemDescription: "Between a date range"},
+		{Route: string(RushHourView), ItemTitle: "Schedule in which there are more orders", ItemDescription: "Betweenn a date range"},
+		{Route: string(AverageTimeToEatView), ItemTitle: "Average eat time", ItemDescription: "Depending group of people"},
+		{Route: "/", ItemTitle: "Complains grouped by person", ItemDescription: "Between a data range"},
+		{Route: "/", ItemTitle: "Complains grouped by dish", ItemDescription: "Between a data range"},
+		{Route: "/", ItemTitle: "Waitress eficiency", ItemDescription: "Grouped by person, in the last 6 months"},
 	}
 
 	menu := components.InitialModel("Menu Principal", items)
 
-	return AnalystModel{0, MostFamousDishesModel{}, GetRushHourModel{}, GetAverageTimeToEatModel{}, menu}
+	return AnalystModel{Main, MostFamousDishesModel{}, GetRushHourModel{}, GetAverageTimeToEatModel{}, menu}
 }
 
 func (m AnalystModel) Init() tea.Cmd {
@@ -48,7 +50,7 @@ func (m AnalystModel) Init() tea.Cmd {
 
 func (m AnalystModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
-	switch currentState := sessionState(constants.ViewStack.Peek().(int)); currentState  {
+	switch currentState := sessionState(ViewStack.Peek().(string)); currentState {
 	case Main:
 		var cmd tea.Cmd
 		newMenu, cmd := m.menu.Update(msg)
@@ -57,7 +59,7 @@ func (m AnalystModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg := msg.(type) {
 		case tea.KeyMsg:
 			if msg.Type == tea.KeyEnter {
-				constants.GetViewStack().Push(m.menu.FocusItem.Index)
+				ViewStack.Push(m.menu.FocusItem.Route)
 			}
 			if msg.Type == tea.KeyEsc {
 				return m, tea.Quit
@@ -68,7 +70,7 @@ func (m AnalystModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg := msg.(type) {
 		case tea.KeyMsg:
 			if msg.Type == tea.KeyEsc {
-				constants.GetViewStack().Pop()
+				ViewStack.Pop()
 			}
 		}
 		return m, nil
@@ -76,7 +78,7 @@ func (m AnalystModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg := msg.(type) {
 		case tea.KeyMsg:
 			if msg.Type == tea.KeyEsc {
-				constants.GetViewStack().Pop()
+				ViewStack.Pop()
 			}
 		}
 		return m, nil
@@ -84,7 +86,7 @@ func (m AnalystModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg := msg.(type) {
 		case tea.KeyMsg:
 			if msg.Type == tea.KeyEsc {
-				constants.GetViewStack().Pop()
+				ViewStack.Pop()
 			}
 		}
 		return m, nil
@@ -95,7 +97,7 @@ func (m AnalystModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m AnalystModel) View() string {
 
-	switch currentState := sessionState(constants.ViewStack.Peek().(int)); currentState {
+	switch currentState := sessionState(ViewStack.Peek().(string)); currentState {
 	case Main:
 		return m.menu.View()
 	case MostOrdersView:

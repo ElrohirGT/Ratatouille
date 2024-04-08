@@ -12,7 +12,7 @@ import (
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
 type MenuItem struct {
-	Index           int
+	Route           string
 	ItemTitle       string
 	ItemDescription string
 }

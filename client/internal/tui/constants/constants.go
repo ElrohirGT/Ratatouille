@@ -3,14 +3,7 @@ package constants
 import (
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/golang-collections/collections/stack"
 )
-
-var ViewStack *stack.Stack = stack.New()
-
-func GetViewStack() *stack.Stack {
-	return ViewStack
-}
 
 const (
 	PrimaryColor    = lipgloss.Color("#94ffa6")
