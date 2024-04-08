@@ -252,6 +252,47 @@ func (q *Queries) GetMostFamousDishesBetween(ctx context.Context, arg GetMostFam
 	return items, nil
 }
 
+const getRoleOfUser = `-- name: GetRoleOfUser :many
+
+SELECT 
+	tu.nombre AS tipo_usuario
+FROM 
+	usuario u
+JOIN 
+	tipoUsuario tu ON u.tipo = tu.id
+WHERE 
+	u.nombre = $1 AND u.contraseña = $2
+`
+
+type GetRoleOfUserParams struct {
+	Nombre     string
+	Contraseña string
+}
+
+// 0. Saber el rol de la persona a partir del usuario y contraseña ingresados por el usuario.
+func (q *Queries) GetRoleOfUser(ctx context.Context, arg GetRoleOfUserParams) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, getRoleOfUser, arg.Nombre, arg.Contraseña)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var tipo_usuario string
+		if err := rows.Scan(&tipo_usuario); err != nil {
+			return nil, err
+		}
+		items = append(items, tipo_usuario)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getRushHourBetween = `-- name: GetRushHourBetween :one
 
 SELECT EXTRACT(hour from p.fecha) as horario, COUNT(*) as count

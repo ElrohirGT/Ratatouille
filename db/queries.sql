@@ -1,4 +1,6 @@
--- Saber el rol de la persona a partir del usuario y contraseña ingresados por el usuario.
+-- 0. Saber el rol de la persona a partir del usuario y contraseña ingresados por el usuario.
+
+-- name: GetRoleOfUser :many
 SELECT 
 	tu.nombre AS tipo_usuario
 FROM 
@@ -6,7 +8,7 @@ FROM
 JOIN 
 	tipoUsuario tu ON u.tipo = tu.id
 WHERE 
-	u.nombre = 'nombre_usuario' AND u.contraseña = 'contraseña_usuario';
+	u.nombre = $1 AND u.contraseña = $2;
 
 
 -- 1. Reporte de los platos más pedidos por los clientes en un rango de fechas solicitadas al usuario.
