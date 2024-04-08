@@ -27,7 +27,7 @@ type MenuModel struct {
 	FocusItem MenuItem
 }
 
-func InitialModel(title string, items []MenuItem) MenuModel {
+func CreateMenu(title string, items []MenuItem) MenuModel {
 
 	menuItems := make([]list.Item, 0)
 

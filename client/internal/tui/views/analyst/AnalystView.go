@@ -39,7 +39,7 @@ func InitialModel() tea.Model {
 		{Route: "/", ItemTitle: "Waitress eficiency", ItemDescription: "Grouped by person, in the last 6 months"},
 	}
 
-	menu := components.InitialModel("Menu Principal", items)
+	menu := components.CreateMenu("Menu Principal", items)
 
 	return AnalystModel{Main, MostFamousDishesModel{}, GetRushHourModel{}, GetAverageTimeToEatModel{}, menu}
 }
