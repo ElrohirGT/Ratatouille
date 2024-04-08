@@ -1,5 +1,11 @@
 package waitress
 
-func Waitress(){
-	println("hellow world")
+import "github.com/ElrohirGT/Ratatouille/internal/tui/components"
+
+type WaitressModel struct {
+	menu components.MenuModel
+}
+
+func Waitress() {
+
 }

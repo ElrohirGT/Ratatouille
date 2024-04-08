@@ -14,13 +14,14 @@ type AuthModel struct {
 	Password   string
 	FocusIndex int
 	Inputs     []textinput.Model
+	// Add SQL driver
 }
 
 var (
-	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
-	blurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-	cursorStyle  = focusedStyle.Copy()
-	noStyle      = lipgloss.NewStyle()
+	focusedStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	blurredStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
+	cursorStyle   = focusedStyle.Copy()
+	noStyle       = lipgloss.NewStyle()
 	focusedButton = fmt.Sprintf("[ %s ]", focusedStyle.Render("Submit"))
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
 )
@@ -76,7 +77,7 @@ func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if s == tea.KeyEnter && m.FocusIndex == len(m.Inputs) {
 				return m, tea.Quit
 			}
-			
+
 			// Changin input focus
 			if s == tea.KeyUp || s == tea.KeyShiftTab {
 				m.FocusIndex--
@@ -132,22 +133,22 @@ func (m *AuthModel) updateInputs(msg tea.Msg) tea.Cmd {
 
 func (m AuthModel) View() string {
 	var b strings.Builder
-	
+
 	for i := range m.Inputs {
 		b.WriteString(m.Inputs[i].View())
-		if i < len(m.Inputs) - 1 {
+		if i < len(m.Inputs)-1 {
 			b.WriteRune('\n')
 		}
 	}
-	
+
 	button := &blurredButton
-	
+
 	if m.FocusIndex == len(m.Inputs) {
 		button = &focusedButton
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
-	
+
 	b.WriteString(blurredStyle.Render("Move with arrows. Submit with <Enter>"))
-	
+
 	return b.String()
 }
