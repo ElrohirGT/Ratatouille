@@ -88,14 +88,14 @@ INSERT INTO tipoUsuario VALUES
 
 
 -- Inserts para la tabla 'usuario'
-INSERT INTO usuario VALUES 
-('Juan Lopez', 'ratatouille1234', 1),
-('Maria Melendez', 'ratatouille1234', 1),
-('Gabriel Otero', 'ratatouille1234', 2),
-('Jose Quinteros', 'ratatouille1234', 2),
-('Alfonso Portillo', 'ratatouille1234', 3),
-('Gema Echeverria', 'ratatouille1234', 3),
-('Bartolome Chevez', 'ratatouille1234', 4);
+-- INSERT INTO usuario VALUES 
+-- ('Juan Lopez', 'ratatouille1234', 1),
+-- ('Maria Melendez', 'ratatouille1234', 1),
+-- ('Gabriel Otero', 'ratatouille1234', 2),
+-- ('Jose Quinteros', 'ratatouille1234', 2),
+-- ('Alfonso Portillo', 'ratatouille1234', 3),
+-- ('Gema Echeverria', 'ratatouille1234', 3),
+-- ('Bartolome Chevez', 'ratatouille1234', 4);
 
 
 -- Inserts para la tabla 'cuenta'
