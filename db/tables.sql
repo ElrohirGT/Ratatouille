@@ -39,8 +39,8 @@ create table cuenta (
 	numCuenta serial primary key,
 	mesa int references mesa(id) on delete cascade not null,
 	estaCerrada boolean not null, 
-	numPersonas int not null
-	total float not null default 0,
+	numPersonas int not null,
+	total float not null default 0
 );
 
 create table cliente (
@@ -104,7 +104,7 @@ create table factura(
 create table pago(
 	tipo int references tipoPago(id) on delete cascade not null,
 	monto float not null,
-	numFactura int references factura(numFactura) on delete cascade not null,
+	factura int references factura(numFactura) on delete cascade not null,
 	cliente int references cliente(id) on delete cascade not null
 );
 
