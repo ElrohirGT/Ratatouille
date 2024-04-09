@@ -145,7 +145,7 @@ RETURNING *;
 SELECT * FROM cliente WHERE id=$1;
 
 -- name: AddPayment :exec
-INSERT INTO pago VALUES ($1, $2, $3, $4);
+INSERT INTO pago VALUES ($1, $2, $3);
 
 -- name: TakeSurvey :exec
 INSERT INTO encuesta VALUES ($1, $2, $3, $4, NOW());
