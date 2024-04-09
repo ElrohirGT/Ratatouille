@@ -3,7 +3,7 @@ package components
 import (
 	"strings"
 
-	"github.com/ElrohirGT/Ratatouille/internal/tui/constants"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/styles"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -37,7 +37,7 @@ func CreateMenu(title string, items []MenuItem) MenuModel {
 
 	// Config List component
 	delegate := list.NewDefaultDelegate()
-	delegate.Styles = constants.GetMenuItemStyle()
+	delegate.Styles = styles.GetMenuItemStyle()
 	modelList := list.New(menuItems, delegate, 0, 0)
 	modelList.Title = title
 

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ElrohirGT/Ratatouille/internal/tui/constants"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/styles"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"golang.org/x/exp/maps"
 )
 
-var focusedButton = constants.GetFocusedStyle().Render("[ Submit ]")
-var blurredButton = fmt.Sprintf("[ %s ]", constants.GetDeactivateStyle().Render("Submit"))
+var focusedButton = styles.GetFocusedStyle().Render("[ Submit ]")
+var blurredButton = fmt.Sprintf("[ %s ]", styles.GetDeactivateStyle().Render("Submit"))
 
 type FormsInput struct {
 	Value       string
@@ -38,9 +38,9 @@ func CreateForms(title string, formsInputs map[string]FormsInput) FormsModel {
 	var t textinput.Model
 	for _, v := range formsInputs {
 		t = textinput.New()
-		t.Cursor.Style = constants.GetFocusedStyle()
-		t.PromptStyle = constants.GetDeactivateStyle()
-		t.TextStyle = constants.GetDeactivateStyle()
+		t.Cursor.Style = styles.GetFocusedStyle()
+		t.PromptStyle = styles.GetDeactivateStyle()
+		t.TextStyle = styles.GetDeactivateStyle()
 		t.CharLimit = 30
 		t.Placeholder = v.Placeholder
 
@@ -86,14 +86,14 @@ func (m FormsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if i == m.FocusIndex {
 					// Set focused state
 					cmds[i] = m.inputs[i].Focus()
-					m.inputs[i].PromptStyle = constants.GetFocusedStyle()
-					m.inputs[i].TextStyle = constants.GetFocusedStyle()
+					m.inputs[i].PromptStyle = styles.GetFocusedStyle()
+					m.inputs[i].TextStyle = styles.GetFocusedStyle()
 					continue
 				}
 				// Remove focused state
 				m.inputs[i].Blur()
-				m.inputs[i].PromptStyle = constants.GetDeactivateStyle()
-				m.inputs[i].TextStyle = constants.GetDeactivateStyle()
+				m.inputs[i].PromptStyle = styles.GetDeactivateStyle()
+				m.inputs[i].TextStyle = styles.GetDeactivateStyle()
 			}
 
 			return m, tea.Batch(cmds...)
@@ -126,7 +126,7 @@ func (m FormsModel) View() string {
 	var b strings.Builder
 	keys := maps.Keys(m.FormInputs)
 
-	b.WriteString(constants.GetTitleStyle().Render(m.Title))
+	b.WriteString(styles.GetTitleStyle().Render(m.Title))
 	b.WriteRune('\n')
 	b.WriteRune('\n')
 

@@ -1,4 +1,4 @@
-package constants
+package styles
 
 import (
 	"github.com/charmbracelet/bubbles/list"
