@@ -57,7 +57,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE account_must_be_fully_payed();
 
 
--- Creación de la función de trigger
+-- Dejar un limite definido de la maxima cantidad de personas que puedan haber en una cuenta.
 CREATE OR REPLACE FUNCTION assert_max_personas()
 RETURNS TRIGGER AS
 $BODY$
@@ -76,3 +76,38 @@ BEFORE INSERT OR UPDATE
 ON cuenta
 FOR EACH ROW
 EXECUTE FUNCTION assert_max_personas();
+
+-- Actualizacion de la suma total del pedido 
+-- un pedido se ponga en una cuenta se agarre el precio unitario de la tabla itemMenu y 
+--lo multiplique por la cantidad del pedido y eso es un total pero ese total se tiene que sumar por 
+--todos los pedidos ingresados a la misma cuenta
+--PENDIENTE DE REVISAR.
+CREATE OR REPLACE FUNCTION actualizar_total_cuenta()
+RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    total_pedido money;
+    total_cuenta money;
+BEGIN
+    -- Calcular el total del pedido
+    total_pedido := NEW.cantidad * (
+        SELECT precioUnitario FROM itemMenu WHERE id = NEW.item
+    );
+    
+    -- Actualizar el total de la cuenta sumando el total del pedido
+    UPDATE cuenta
+    SET total = total + total_pedido
+    WHERE numCuenta = NEW.cuenta;
+    
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+-- Creación del trigger
+CREATE TRIGGER calcular_total_pedido
+AFTER INSERT OR UPDATE
+ON pedido
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_total_cuenta();
+
