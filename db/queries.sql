@@ -78,11 +78,10 @@ WHERE
 	en.fecha BETWEEN NOW() AND NOW() - interval '6 months'
 GROUP BY en.empleado, mes;
 
--- name: SignIn :one
+-- name: SignIn :exec
 INSERT INTO 
 	usuario (nombre, contraseña, tipo) 
-VALUES ($1, $2, $3) 
-RETURNING *;
+VALUES ($1, $2, $3);
 
 -- name: LogIn :one
 SELECT t.nombre
