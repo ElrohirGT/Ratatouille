@@ -111,3 +111,41 @@ WHERE id = $1;
 UPDATE pedido
 SET estado = (SELECT id FROM estadosPedidos WHERE nombre = 'Entregado')
 WHERE id = $1;
+
+-- MESERO
+-- name: CreateClient :one
+INSERT INTO cliente VALUES (default, $1, $2, $3) RETURNING *;
+
+-- name: OpenAccount :one
+INSERT INTO cuenta VALUES (default, $1, false, $2) RETURNING *;
+
+-- name: TakeOrder :one
+INSERT INTO pedido VALUES 
+(default, NOW(), (SELECT id FROM estadosPedidos WHERE nombre = 'Pedido'), $1, $2, $3)
+RETURNING *;
+
+-- name: CloseAccount :exec
+UPDATE cuenta
+estaCerrada = true
+WHERE numCuenta = $1;
+
+-- name: GetActiveAccounts :many
+SELECT *
+FROM cuenta
+WHERE estaCerrada = false;
+
+-- name: GetClients :many
+SELECT * FROM cliente;
+
+-- name: GenerateBill :one
+INSERT INTO factura VALUES (default, NOW(), $1, $2)
+RETURNING *;
+
+-- name: GetClient :one
+SELECT * FROM cliente WHERE id=$1;
+
+-- name: AddPayment :exec
+INSERT INTO pago VALUES ($1, $2, $3, $4);
+
+-- name: TakeSurvey :exec
+INSERT INTO encuesta VALUES ($1, $2, $3, $4, NOW());
