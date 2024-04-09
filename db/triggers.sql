@@ -55,3 +55,24 @@ BEFORE UPDATE
 ON cuenta
 FOR EACH ROW
 EXECUTE PROCEDURE account_must_be_fully_payed();
+
+
+-- Creación de la función de trigger
+CREATE OR REPLACE FUNCTION assert_max_personas()
+RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.numPersonas > 14 THEN
+        RAISE EXCEPTION 'El número de personas no puede ser mayor de 14';
+    END IF;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+-- Creación del trigger
+CREATE TRIGGER assert_num_personas
+BEFORE INSERT OR UPDATE
+ON cuenta
+FOR EACH ROW
+EXECUTE FUNCTION assert_max_personas();

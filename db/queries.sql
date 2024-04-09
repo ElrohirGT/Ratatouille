@@ -149,3 +149,21 @@ INSERT INTO pago VALUES ($1, $2, $3);
 
 -- name: TakeSurvey :exec
 INSERT INTO encuesta VALUES ($1, $2, $3, $4, NOW());
+
+--CHEF --Get Pending Dishes
+--Para platillos CHEF
+SELECT 
+	IM.id,
+	P.fecha,
+	IM.nombre, 
+	P.cantidad,
+	EP.nombre
+FROM pedido P
+	INNER JOIN estadosPedidos EP on P.estado = EP.id
+	INNER JOIN itemMenu IM on P.item = IM.id
+	inner join itemmenucategoria IMC on IM.categoria = IMC.id
+where (EP.nombre = 'En espera' or EP.nombre = 'Cocinado') and IM.categoria = 1 ;
+
+
+
+
