@@ -77,3 +77,38 @@ WHERE
 	em.puesto = 'Mesero' AND
 	en.fecha BETWEEN NOW() AND NOW() - interval '6 months'
 GROUP BY en.empleado, mes;
+
+-- name: SignIn :one
+INSERT INTO 
+	usuario (nombre, contraseña, tipo) 
+VALUES ($1, $2, $3) 
+RETURNING *;
+
+-- name: LogIn :one
+SELECT t.nombre
+FROM usuario u
+	INNER JOIN tipoUsuario t ON u.tipo = t.id
+WHERE u.nombre = $1 AND u.contraseña = $2
+LIMIT 1;
+
+-- BARTENDER
+-- name: GetPendingDrinks :many
+SELECT *
+FROM pedido p
+	INNER JOIN estadosPedidos e ON p.estado = e.id
+	INNER JOIN itemMenu im ON p.item = im.id
+	INNER JOIN itemMenuCategoria imc ON im.categoria = imc.id
+WHERE 
+	imc.nombre = 'Bebidas' 
+	AND e.nombre = 'Pedido'
+ORDER BY p.fecha DESC;
+
+-- name: SetOrderPreparing :exec
+UPDATE pedido
+SET estado = (SELECT id FROM estadosPedidos WHERE nombre = 'En preparación')
+WHERE id = $1;
+
+-- name: SetOrderDelivered :exec
+UPDATE pedido
+SET estado = (SELECT id FROM estadosPedidos WHERE nombre = 'Entregado')
+WHERE id = $1;
