@@ -88,14 +88,14 @@ INSERT INTO tipoUsuario VALUES
 
 
 -- Inserts para la tabla 'usuario'
--- INSERT INTO usuario VALUES 
--- ('Juan Lopez', 'ratatouille1234', 1),
--- ('Maria Melendez', 'ratatouille1234', 1),
--- ('Gabriel Otero', 'ratatouille1234', 2),
--- ('Jose Quinteros', 'ratatouille1234', 2),
--- ('Alfonso Portillo', 'ratatouille1234', 3),
--- ('Gema Echeverria', 'ratatouille1234', 3),
--- ('Bartolome Chevez', 'ratatouille1234', 4);
+--INSERT INTO usuario VALUES 
+--('Juan Lopez', 'ratatouille1234', 1),
+--('Maria Melendez', 'ratatouille1234', 1),
+--('Gabriel Otero', 'ratatouille1234', 2),
+--('Jose Quinteros', 'ratatouille1234', 2),
+--('Alfonso Portillo', 'ratatouille1234', 3),
+--('Gema Echeverria', 'ratatouille1234', 3),
+--('Bartolome Chevez', 'ratatouille1234', 4);
 
 
 -- Inserts para la tabla 'cuenta'
@@ -105,7 +105,7 @@ INSERT INTO cuenta VALUES
 (2, DEFAULT, true, 3),
 (4, DEFAULT, true, 10),
 (5, DEFAULT, false, 9),
-(6, DEFAULT, false, 11),
+(6, DEFAULT, false, 11), 
 (7, DEFAULT, false, 12),
 (8, DEFAULT, true, 3),
 (9, DEFAULT, false, 1),

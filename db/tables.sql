@@ -10,6 +10,7 @@ create table puesto(
 	nombrePuesto varchar (30)
 );
 
+
 create table empleado (
 	id serial primary key,
 	nombre varchar(30) not null,
@@ -17,11 +18,14 @@ create table empleado (
 	area integer references area(id) on delete cascade --Puede ser null, ya que si no es mesero no està asignado a ningun area.
 );
 
+
 create table mesa (
 	id serial primary key,
 	area int references area(id) on delete cascade not null,
 	capacidad int not null
 );
+
+
 
 create table tipoUsuario (
 	id serial primary key,
@@ -35,13 +39,15 @@ create table usuario (
 	foreign key (tipo) references tipoUsuario(id) on delete cascade
 );
 
+
 create table cuenta (
-	numCuenta serial primary key,
 	mesa int references mesa(id) on delete cascade not null,
+	numCuenta serial primary key,
 	estaCerrada boolean not null, 
 	numPersonas int not null,
 	total float not null default 0
 );
+
 
 create table cliente (
 	id SERIAL primary key,
@@ -53,20 +59,24 @@ create table cliente (
 );
 
 
+
 create table estadosPedidos (
 	id SERIAL primary key,
 	nombre varchar(30) not null
 );
+
 
 create table tipoPago (
 	id SERIAL primary key,
 	nombre varchar (30) not null
 );
 
+
 create table itemMenuCategoria (
 	id serial primary key,
 	nombre varchar(30) not null
 );
+
 
 create table itemMenu (
 	id SERIAL primary key,
@@ -76,6 +86,7 @@ create table itemMenu (
 	categoria int references itemMenuCategoria(id) on delete cascade not null
 );
 
+
 create table queja (
 	cliente int references cliente(id) on delete cascade not null,
 	gravedad int not null,
@@ -84,6 +95,7 @@ create table queja (
 	empleado integer references empleado (id) on delete cascade,
 	item integer references itemMenu (id) on delete cascade
 );
+
 
 create table pedido (
 	id serial primary key,
@@ -101,17 +113,18 @@ create table factura(
 	cliente int references cliente(id) on delete cascade not null
 );
 
+
 create table pago(
 	tipo int references tipoPago(id) on delete cascade not null,
 	monto float not null,
-	factura int references factura(numFactura) on delete cascade not null
+	Factura int references factura(numFactura) on delete cascade not null
 );
+
 
 create table encuesta (
 	empleado int references empleado(id) on delete cascade not null,
 	cliente int references cliente(id) on delete cascade not null,
 	gradoAmabilidad int not null,
-	gradoExactitud int not null,
-	fecha timestamp not null
+	gradoExactitud int not null, --La encuesta no necesariamente tiene que ser not null ya que a 
+	fecha timestamp not null --A veces la gente simplemente prefiere no contestarlas pero para fines de proyecto.
 );
-
