@@ -104,8 +104,7 @@ create table factura(
 create table pago(
 	tipo int references tipoPago(id) on delete cascade not null,
 	monto float not null,
-	factura int references factura(numFactura) on delete cascade not null,
-	cliente int references cliente(id) on delete cascade not null
+	factura int references factura(numFactura) on delete cascade not null
 );
 
 create table encuesta (
