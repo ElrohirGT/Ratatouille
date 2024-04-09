@@ -40,6 +40,7 @@ create table cuenta (
 	mesa int references mesa(id) on delete cascade not null,
 	estaCerrada boolean not null, 
 	numPersonas int not null
+	total float not null default 0,
 );
 
 create table cliente (
