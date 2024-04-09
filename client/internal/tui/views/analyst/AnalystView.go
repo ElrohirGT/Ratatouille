@@ -10,6 +10,7 @@ var ViewStack *stack.Stack = stack.New()
 
 type sessionState string
 
+// SUBVIEWS
 const (
 	Main                 sessionState = "/"
 	MostOrdersView       sessionState = "/most_orders"
@@ -18,10 +19,10 @@ const (
 )
 
 type AnalystModel struct {
-	state                   sessionState
-	mostFamousDishesModel   MostFamousDishesModel
-	getRushHourView         GetRushHourModel
-	getAverageTimeToEatView GetAverageTimeToEatModel
+	state                sessionState
+	FamousDishesView     MostFamousDishesModel
+	RushHourView         GetRushHourModel
+	AverageTimeToEatView AverageTimeToEatModel
 
 	menu components.MenuModel
 }
@@ -41,7 +42,7 @@ func InitialModel() tea.Model {
 
 	menu := components.CreateMenu("Menu Principal", items)
 
-	return AnalystModel{Main, MostFamousDishesModel{}, GetRushHourModel{}, GetAverageTimeToEatModel{}, menu}
+	return AnalystModel{Main, MostFamousDishesModel{}, GetRushHourModel{}, AverageTimeToEatModel{}, menu}
 }
 
 func (m AnalystModel) Init() tea.Cmd {
@@ -88,6 +89,7 @@ func (m AnalystModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if msg.Type == tea.KeyEsc {
 				ViewStack.Pop()
 			}
+		
 		}
 		return m, nil
 	}
