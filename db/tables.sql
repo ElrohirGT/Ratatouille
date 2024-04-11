@@ -34,11 +34,10 @@ create table tipoUsuario (
 
 create table usuario (
 	nombre varchar (30) not null,
-	contraseña varchar (30) not null,
+	contraseña varchar (64) not null,
 	tipo int not null, 
 	foreign key (tipo) references tipoUsuario(id) on delete cascade
 );
-
 
 create table cuenta (
 	mesa int references mesa(id) on delete cascade not null,
