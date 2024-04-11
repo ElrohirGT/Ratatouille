@@ -27,3 +27,11 @@ func CreateSignInView() SignInModel {
 	})
 	return SignInModel{forms: newForm}
 }
+
+func CreateLoginView() SignInModel {
+	newForm := components.CreateForms("Sign In", map[string]components.FormsInput{
+		"Username": {Placeholder: "Hector Hurtarte"},
+		"Password": {Placeholder: "password", InputType: "password"},
+	})
+	return SignInModel{forms: newForm}
+}

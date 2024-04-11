@@ -24,13 +24,13 @@ func (m SignInModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch newMsg := msg.(type) {
 	case tea.KeyMsg:
 		if newMsg.Type == tea.KeyEsc {
-			return CreateAuthView(), nil
+			return CreateAuthView(), cmds
 		}
 		if newMsg.Type == tea.KeyEnter {
 			m.username = m.forms.FormInputs["Username"].Value
-			m.role = m.forms.FormInputs["Password"].Value
-			m.password = m.forms.FormInputs["Rold"].Value
-			return m, cmds
+			m.password = m.forms.FormInputs["Password"].Value
+			m.role = m.forms.FormInputs["Role"].Value
+			return m, nil
 		}
 	}
 

@@ -6,9 +6,6 @@ import (
 )
 
 type TUI struct {
-	id          int
-	username    string
-	role        string
 	currentView tea.Model
 }
 

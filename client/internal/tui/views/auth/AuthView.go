@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ElrohirGT/Ratatouille/internal/tui/components"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/global"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -28,10 +29,9 @@ func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		if newMsg.Type == tea.KeyEnter {
-			switch m.Menu.FocusItem.Route {
+			switch m.Menu.SelectedItem.Route {
 			case "Login":
-				fmt.Println("YOU PRESS ME 2")
-				return m, cmd
+				return CreateLoginView(), nil
 			case "SignUp":
 				return CreateSignInView(), nil
 			}
@@ -41,5 +41,5 @@ func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 func (m AuthModel) View() string {
-	return m.Menu.View()
+	return m.Menu.View() + "\n" + fmt.Sprintf("%s %s %s", global.Id, global.Role, global.Username)
 }
