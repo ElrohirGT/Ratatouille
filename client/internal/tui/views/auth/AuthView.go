@@ -36,10 +36,10 @@ func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		newMenu, cmd := m.Menu.Update(msg)
 		m.Menu = newMenu.(components.MenuModel)
-	
+
 		return m, cmd
 	}
-	
+
 	return m, nil
 }
 func (m AuthModel) View() string {

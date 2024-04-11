@@ -9,7 +9,7 @@ const (
 	PrimaryColor    = lipgloss.Color("#94ffa6")
 	SecondaryColor  = lipgloss.Color("#b259e3")
 	DeactivateColor = lipgloss.Color("#5d9e68")
-	ErrorColor = lipgloss.Color("#eb6c83")
+	ErrorColor      = lipgloss.Color("#eb6c83")
 	BlackColor      = lipgloss.Color("#000000")
 	WhiteColor      = lipgloss.Color("#ffffff")
 	GreyColor       = lipgloss.Color("#b5b5b5")

@@ -40,7 +40,7 @@ func (m SignUpModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.password = m.forms.FormInputs["Password"].Value
 			m.role = m.forms.FormInputs["Role"].Value
 
-			return m, SignUser(m.username, m.password, m.role)
+			return m, handleSignUser(m.username, m.password, m.role)
 		}
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
@@ -55,7 +55,7 @@ func (m SignUpModel) View() string {
 	var b strings.Builder
 
 	b.WriteString(m.forms.View() + "\n\n")
-	
+
 	if m.errorMsg != "" {
 		b.WriteString(styles.GetErrorStyle().Render(m.errorMsg))
 	}
@@ -63,9 +63,9 @@ func (m SignUpModel) View() string {
 	return b.String()
 }
 
-func SignUser(username, password, role string) tea.Cmd {
-	
-	if username == "" || password == "" || role == ""{
+func handleSignUser(username, password, role string) tea.Cmd {
+
+	if username == "" || password == "" || role == "" {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Cannot have empty fields!"}
 		}

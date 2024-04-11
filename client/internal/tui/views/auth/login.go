@@ -51,7 +51,7 @@ func (m LoginModel) View() string {
 	var b strings.Builder
 
 	b.WriteString(m.forms.View() + "\n\n")
-	
+
 	if m.errorMsg != "" {
 		b.WriteString(styles.GetErrorStyle().Render(m.errorMsg))
 	}
@@ -60,7 +60,7 @@ func (m LoginModel) View() string {
 }
 
 func LoginUser(username, password string) tea.Cmd {
-	
+
 	if username == "" || password == "" {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Cannot have empty fields!"}
@@ -79,4 +79,3 @@ func LoginUser(username, password string) tea.Cmd {
 		}
 	}
 }
-
