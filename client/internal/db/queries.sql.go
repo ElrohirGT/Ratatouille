@@ -649,18 +649,24 @@ func (q *Queries) SetOrderPreparing(ctx context.Context, id int32) error {
 
 const signIn = `-- name: SignIn :exec
 INSERT INTO 
-	usuario (nombre, contraseña, tipo) 
-VALUES ($1, $2, $3)
+	usuario (nombre, contraseña, tipo, empleado) 
+VALUES ($1, $2, $3, $4)
 `
 
 type SignInParams struct {
 	Nombre     string
 	Contraseña string
 	Tipo       int32
+	Empleado   int32
 }
 
 func (q *Queries) SignIn(ctx context.Context, arg SignInParams) error {
-	_, err := q.db.ExecContext(ctx, signIn, arg.Nombre, arg.Contraseña, arg.Tipo)
+	_, err := q.db.ExecContext(ctx, signIn,
+		arg.Nombre,
+		arg.Contraseña,
+		arg.Tipo,
+		arg.Empleado,
+	)
 	return err
 }
 
