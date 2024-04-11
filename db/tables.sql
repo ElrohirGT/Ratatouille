@@ -36,6 +36,7 @@ create table usuario (
 	nombre varchar (30) not null,
 	contraseña varchar (64) not null,
 	tipo int not null, 
+	empleado int not null references empleado(id),
 	foreign key (tipo) references tipoUsuario(id) on delete cascade
 );
 

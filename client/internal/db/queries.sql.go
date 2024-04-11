@@ -355,6 +355,38 @@ func (q *Queries) GetEfficiencyReport(ctx context.Context) ([]GetEfficiencyRepor
 	return items, nil
 }
 
+const getEmployees = `-- name: GetEmployees :many
+SELECT id, nombre, puesto, area FROM empleado
+`
+
+func (q *Queries) GetEmployees(ctx context.Context) ([]Empleado, error) {
+	rows, err := q.db.QueryContext(ctx, getEmployees)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Empleado
+	for rows.Next() {
+		var i Empleado
+		if err := rows.Scan(
+			&i.ID,
+			&i.Nombre,
+			&i.Puesto,
+			&i.Area,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getMostFamousDishesBetween = `-- name: GetMostFamousDishesBetween :many
 
 SELECT p.item, i.nombre, i.descripcion, COUNT(p) as count
@@ -546,9 +578,10 @@ func (q *Queries) GetRushHourBetween(ctx context.Context, arg GetRushHourBetween
 }
 
 const logIn = `-- name: LogIn :one
-SELECT t.nombre
+SELECT t.nombre as TipoUsuario, e.id as IdEmpleado
 FROM usuario u
 	INNER JOIN tipoUsuario t ON u.tipo = t.id
+	INNER JOIN empleado e ON u.empleado = e.id
 WHERE u.nombre = $1 AND u.contraseña = $2
 LIMIT 1
 `
@@ -558,11 +591,16 @@ type LogInParams struct {
 	Contraseña string
 }
 
-func (q *Queries) LogIn(ctx context.Context, arg LogInParams) (string, error) {
+type LogInRow struct {
+	Tipousuario string
+	Idempleado  int32
+}
+
+func (q *Queries) LogIn(ctx context.Context, arg LogInParams) (LogInRow, error) {
 	row := q.db.QueryRowContext(ctx, logIn, arg.Nombre, arg.Contraseña)
-	var nombre string
-	err := row.Scan(&nombre)
-	return nombre, err
+	var i LogInRow
+	err := row.Scan(&i.Tipousuario, &i.Idempleado)
+	return i, err
 }
 
 const openAccount = `-- name: OpenAccount :one

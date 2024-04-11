@@ -84,9 +84,10 @@ INSERT INTO
 VALUES ($1, $2, $3);
 
 -- name: LogIn :one
-SELECT t.nombre
+SELECT t.nombre as TipoUsuario, e.id as IdEmpleado
 FROM usuario u
 	INNER JOIN tipoUsuario t ON u.tipo = t.id
+	INNER JOIN empleado e ON u.empleado = e.id
 WHERE u.nombre = $1 AND u.contraseña = $2
 LIMIT 1;
 
@@ -136,6 +137,9 @@ WHERE estaCerrada = false;
 
 -- name: GetClients :many
 SELECT * FROM cliente;
+
+-- name: GetEmployees :many
+SELECT * FROM empleado;
 
 -- name: GenerateBill :one
 INSERT INTO factura (fecha, cuenta, cliente) VALUES (NOW(), $1, $2)

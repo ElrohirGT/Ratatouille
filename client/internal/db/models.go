@@ -120,4 +120,5 @@ type Usuario struct {
 	Nombre     string
 	Contraseña string
 	Tipo       int32
+	Empleado   int32
 }
