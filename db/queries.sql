@@ -80,8 +80,8 @@ GROUP BY en.empleado, mes;
 
 -- name: SignIn :exec
 INSERT INTO 
-	usuario (nombre, contraseña, tipo) 
-VALUES ($1, $2, $3);
+	usuario (nombre, contraseña, tipo, empleado) 
+VALUES ($1, $2, $3, $4);
 
 -- name: LogIn :one
 SELECT t.nombre as TipoUsuario, e.id as IdEmpleado
