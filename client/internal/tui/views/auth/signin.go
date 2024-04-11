@@ -12,15 +12,6 @@ type SignInModel struct {
 	role     string
 }
 
-func CreateSignInView() SignInModel {
-	newForm := components.CreateForms("Sign In", map[string]components.FormsInput{
-		"Username": {Placeholder: "Hector Hurtarte"},
-		"Password": {Placeholder: "password", InputType: "password"},
-		"Role":     {Placeholder: "Mesero, Chef..."},
-	})
-	return SignInModel{forms: newForm}
-}
-
 func (m SignInModel) Init() tea.Cmd {
 	return nil
 }
