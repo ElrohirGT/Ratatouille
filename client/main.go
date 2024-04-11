@@ -6,6 +6,7 @@ import (
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
 	"github.com/ElrohirGT/Ratatouille/internal/tui"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/global"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -19,13 +20,17 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	// Driver Initialization
-	DB_Driver = db.New(dbConnection)
 
-	p := tea.NewProgram(tui.CreateTUI(), tea.WithAltScreen())
+	defer dbConnection.Close()
+
+	// Driver Initialization
+	global.Driver = db.New(dbConnection)
+
+	p := tea.NewProgram(tui.CreateTUI())
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("An Error happened: %v", err)
 		os.Exit(1)
 	}
+	
 
 }
