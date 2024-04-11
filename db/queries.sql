@@ -126,7 +126,7 @@ RETURNING *;
 
 -- name: CloseAccount :exec
 UPDATE cuenta
-estaCerrada = true
+SET estaCerrada = true
 WHERE numCuenta = $1;
 
 -- name: GetActiveAccounts :many
