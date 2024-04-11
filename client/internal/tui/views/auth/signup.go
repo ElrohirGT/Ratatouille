@@ -79,8 +79,9 @@ func SignUser(username, password, role string) tea.Cmd {
 	}
 
 	return func() tea.Msg {
+		encryptedPassword := global.EncryptSHA256(password)
 		err := global.Driver.SignIn(context.Background(),
-			db.SignInParams{Nombre: username, Contraseña: password, Tipo: int32(v)})
+			db.SignInParams{Nombre: username, Contraseña: encryptedPassword, Tipo: int32(v)})
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {
