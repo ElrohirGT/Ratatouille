@@ -41,9 +41,6 @@ func (m MenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyTab, tea.KeyShiftTab, tea.KeyEnter, tea.KeyUp, tea.KeyDown:
 			s := msg.Type
 
-			if s == tea.KeyEnter && m.FocusIndex != len(m.Items)-1 {
-				return m, nil
-			}
 			if s == tea.KeyUp || s == tea.KeyShiftTab {
 				m.FocusIndex--
 			} else {
