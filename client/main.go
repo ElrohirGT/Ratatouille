@@ -22,7 +22,7 @@ func main() {
 	// Driver Initialization
 	DB_Driver = db.New(dbConnection)
 
-	p := tea.NewProgram(tui.CreateTUI())
+	p := tea.NewProgram(tui.CreateTUI(), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("An Error happened: %v", err)
 		os.Exit(1)
