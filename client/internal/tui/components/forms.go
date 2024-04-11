@@ -31,6 +31,7 @@ func CreateForms(title string, formsInputs map[string]FormsInput) FormsModel {
 
 	m := FormsModel{
 		Title:       title,
+		FocusIndex:  0,
 		FormInputs:  formsInputs,
 		inputsTitle: make([]string, 0),
 		inputs:      make([]textinput.Model, 0),
@@ -69,7 +70,7 @@ func (m FormsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyTab, tea.KeyShiftTab, tea.KeyEnter, tea.KeyUp, tea.KeyDown:
 			s := msg.Type
 
-			if s == tea.KeyEnter && m.FocusIndex != len(m.FormInputs) {
+			if s == tea.KeyEnter {
 				return m, nil
 			}
 			if s == tea.KeyUp || s == tea.KeyShiftTab {
