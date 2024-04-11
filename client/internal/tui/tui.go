@@ -1,43 +1,35 @@
 package tui
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/ElrohirGT/Ratatouille/internal/tui/views/analyst"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/views/auth"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-// TODO: Add SQL Driver to paramater, and add it to the model
-func StartAuthentication() (username string, password string, role string) {
-
-	program := tea.NewProgram(auth.InitialModel(), tea.WithAltScreen())
-
-	finalModel, err := program.Run()
-
-	if err != nil {
-		fmt.Println("Error running program", err)
-		os.Exit(1)
-	}
-
-	response := finalModel.(auth.AuthModel)
-
-	return response.Username, response.Password, "role"
+type TUI struct {
+	id          int
+	username    string
+	role        string
+	currentView tea.Model
 }
 
-func StartApp(role string) {
+func CreateTUI() TUI {
+	return TUI{currentView: auth.CreateAuthView()}
+}
 
-	var m tea.Model
-	switch role {
-	case "encargado":
-		m = analyst.InitialModel()
-	default:
-		m = analyst.InitialModel()
-	}
+func (t TUI) Init() tea.Cmd {
+	return nil
+}
 
-	if _, err := tea.NewProgram(m).Run(); err != nil {
-		fmt.Println("Error running program", err)
-		os.Exit(1)
-	}
+func (t TUI) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+
+	// returns the new view
+	newView, cmd := t.currentView.Update(msg)
+
+	t.currentView = newView
+
+	return t, cmd
+}
+
+func (t TUI) View() string {
+	return t.currentView.View()
 }

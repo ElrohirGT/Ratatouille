@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
 	"github.com/ElrohirGT/Ratatouille/internal/tui"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 var DB_Driver *db.Queries
@@ -20,5 +22,10 @@ func main() {
 	// Driver Initialization
 	DB_Driver = db.New(dbConnection)
 
-	tui.StartApp("encargado")
+	p := tea.NewProgram(tui.CreateTUI())
+	if _, err := p.Run(); err != nil {
+		fmt.Printf("An Error happened: %v", err)
+		os.Exit(1)
+	}
+
 }
