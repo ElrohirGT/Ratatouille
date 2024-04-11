@@ -7,7 +7,7 @@ func CreateWaitressView() WaitressModel {
 		{Route: "createClient", ItemTitle: "Create Client", ItemDescription: "Registers a new client to the records."},
 	}
 
-	menu := components.CreateMenu("Ratatouille", menuItems)
+	menu := components.CreateMenu("Waitress Management", menuItems)
 	return WaitressModel{Menu: menu}
 }
 

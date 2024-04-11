@@ -18,9 +18,6 @@ func (m WaitressModel) Init() tea.Cmd {
 
 func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
-	newMenu, cmd := m.Menu.Update(msg)
-	m.Menu = newMenu.(components.MenuModel)
-
 	switch newMsg := msg.(type) {
 	case tea.KeyMsg:
 
@@ -34,6 +31,9 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return CreateCreateClientView(), nil
 			}
 		}
+		newMenu, cmd := m.Menu.Update(msg)
+		m.Menu = newMenu.(components.MenuModel)
+
 		return m, cmd
 	}
 	return m, nil
