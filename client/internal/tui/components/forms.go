@@ -135,7 +135,7 @@ func (m FormsModel) View() string {
 		b.WriteString(fmt.Sprintf("╭─・ %s \n", m.inputsTitle[i]))
 		b.WriteString(m.inputs[i].View())
 		if i < len(m.inputs)-1 {
-			b.WriteRune('\n')
+			b.WriteString("\n\n")
 		}
 	}
 
