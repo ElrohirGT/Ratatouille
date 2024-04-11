@@ -18,9 +18,6 @@ func (m AuthModel) Init() tea.Cmd {
 
 func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
-	newMenu, cmd := m.Menu.Update(msg)
-	m.Menu = newMenu.(components.MenuModel)
-
 	switch newMsg := msg.(type) {
 	case tea.KeyMsg:
 
@@ -33,13 +30,18 @@ func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "Login":
 				return CreateLoginView(), nil
 			case "SignUp":
-				return CreateSignInView(), nil
+				return CreateSignUpView(), nil
 			}
 		}
+
+		newMenu, cmd := m.Menu.Update(msg)
+		m.Menu = newMenu.(components.MenuModel)
+	
 		return m, cmd
 	}
+	
 	return m, nil
 }
 func (m AuthModel) View() string {
-	return m.Menu.View() + "\n" + fmt.Sprintf("%d %s %s", global.Id, global.Role, global.Username)
+	return m.Menu.View() + "\n" + fmt.Sprintf(global.Username)
 }

@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
@@ -12,19 +11,18 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type SignUpModel struct {
+type LoginModel struct {
 	forms    components.FormsModel
 	username string
 	password string
-	role     string
 	errorMsg string
 }
 
-func (m SignUpModel) Init() tea.Cmd {
+func (m LoginModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m SignUpModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	newForm, cmds := m.forms.Update(msg)
 	m.forms = newForm.(components.FormsModel)
@@ -32,15 +30,12 @@ func (m SignUpModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch newMsg := msg.(type) {
 	case tea.KeyMsg:
 		if newMsg.Type == tea.KeyEsc {
-			return CreateAuthView(), cmds
+			return CreateAuthView(), nil
 		}
-		if newMsg.Type == tea.KeyEnter && m.forms.FocusIndex == len(m.forms.FormInputs) {
-
+		if newMsg.Type == tea.KeyEnter {
 			m.username = m.forms.FormInputs["Username"].Value
 			m.password = m.forms.FormInputs["Password"].Value
-			m.role = m.forms.FormInputs["Role"].Value
-
-			return m, SignUser(m.username, m.password, m.role)
+			return m, LoginUser(m.username, m.password)
 		}
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
@@ -51,7 +46,8 @@ func (m SignUpModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmds
 }
 
-func (m SignUpModel) View() string {
+func (m LoginModel) View() string {
+
 	var b strings.Builder
 
 	b.WriteString(m.forms.View() + "\n\n")
@@ -63,28 +59,23 @@ func (m SignUpModel) View() string {
 	return b.String()
 }
 
-func SignUser(username, password, role string) tea.Cmd {
+func LoginUser(username, password string) tea.Cmd {
 	
-	if username == "" || password == "" || role == ""{
+	if username == "" || password == "" {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Cannot have empty fields!"}
 		}
 	}
 
-	v, err := strconv.Atoi(role)
-	if err != nil {
-		return func() tea.Msg {
-			return global.ErrorDB{Description: "Role must be an integer between 1 and 4"}
-		}
-	}
-
 	return func() tea.Msg {
-		err := global.Driver.SignIn(context.Background(),
-			db.SignInParams{Nombre: username, Contraseña: password, Tipo: int32(v)})
+		v, err := global.Driver.LogIn(context.Background(),
+			db.LogInParams{Nombre: username, Contraseña: password})
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {
+			global.Username = v
 			return global.SuccesDB{Description: "User created correctly"}
 		}
 	}
 }
+

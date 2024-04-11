@@ -2,12 +2,7 @@ package auth
 
 import (
 	"github.com/ElrohirGT/Ratatouille/internal/tui/components"
-	tea "github.com/charmbracelet/bubbletea"
 )
-
-type IController interface {
-	ShowAuthView() tea.Model
-}
 
 func CreateAuthView() AuthModel {
 	menuItems := []components.MenuItem{
@@ -19,19 +14,19 @@ func CreateAuthView() AuthModel {
 	return AuthModel{Menu: menu}
 }
 
-func CreateSignInView() SignInModel {
-	newForm := components.CreateForms("Sign In", map[string]components.FormsInput{
+func CreateSignUpView() SignUpModel {
+	newForm := components.CreateForms("Sign Up", map[string]components.FormsInput{
 		"Username": {Placeholder: "Hector Hurtarte"},
 		"Password": {Placeholder: "password", InputType: "password"},
-		"Role":     {Placeholder: "Mesero, Chef..."},
+		"Role":     {Placeholder: "1 (Mesero), 2 (Encargado), 3 (Chef), 4 (Bartender)"},
 	})
-	return SignInModel{forms: newForm}
+	return SignUpModel{forms: newForm}
 }
 
-func CreateLoginView() SignInModel {
-	newForm := components.CreateForms("Sign In", map[string]components.FormsInput{
+func CreateLoginView() LoginModel {
+	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
 		"Username": {Placeholder: "Hector Hurtarte"},
 		"Password": {Placeholder: "password", InputType: "password"},
 	})
-	return SignInModel{forms: newForm}
+	return LoginModel{forms: newForm}
 }
