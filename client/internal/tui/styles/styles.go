@@ -9,6 +9,7 @@ const (
 	PrimaryColor    = lipgloss.Color("#94ffa6")
 	SecondaryColor  = lipgloss.Color("#b259e3")
 	DeactivateColor = lipgloss.Color("#5d9e68")
+	ErrorColor = lipgloss.Color("#eb6c83")
 	BlackColor      = lipgloss.Color("#000000")
 	WhiteColor      = lipgloss.Color("#ffffff")
 	GreyColor       = lipgloss.Color("#b5b5b5")
@@ -43,20 +44,22 @@ var (
 				BorderLeft(true).
 				PaddingLeft(1).
 				MarginLeft(3)
-	
+
 	ItemTitleDefault = lipgloss.NewStyle().
-		Foreground(WhiteColor).
-		Bold(true).
-		PaddingLeft(1).
-		MarginLeft(3)
+				Foreground(WhiteColor).
+				Bold(true).
+				PaddingLeft(1).
+				MarginLeft(3)
 
 	ItemDescriptionDefault = lipgloss.NewStyle().
-		Foreground(GreyColor).
-		PaddingLeft(1).
-		MarginLeft(3)
-	
+				Foreground(GreyColor).
+				PaddingLeft(1).
+				MarginLeft(3)
+
 	helpStyle = lipgloss.NewStyle().
-		Foreground(GreyColor)
+			Foreground(GreyColor)
+	errorStyle = lipgloss.NewStyle().
+			Foreground(ErrorColor)
 )
 
 func GetFocusedStyle() lipgloss.Style {
@@ -77,6 +80,10 @@ func GetMenuItemDefaultStyle() (lipgloss.Style, lipgloss.Style) {
 	return ItemTitleDefault, ItemDescriptionDefault
 }
 
-func GetHelpStyle() (lipgloss.Style) {
+func GetHelpStyle() lipgloss.Style {
 	return helpStyle
+}
+
+func GetErrorStyle() lipgloss.Style {
+	return errorStyle
 }
