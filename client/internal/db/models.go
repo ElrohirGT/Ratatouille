@@ -28,6 +28,7 @@ type Cuentum struct {
 	Numcuenta   int32
 	Estacerrada bool
 	Numpersonas int32
+	Total       float64
 }
 
 type Empleado struct {
@@ -77,9 +78,9 @@ type Mesa struct {
 }
 
 type Pago struct {
-	Tipo       int32
-	Monto      float64
-	Numfactura int32
+	Tipo    int32
+	Monto   float64
+	Factura int32
 }
 
 type Pedido struct {

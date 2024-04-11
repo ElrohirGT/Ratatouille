@@ -103,25 +103,25 @@ WHERE
 ORDER BY p.fecha DESC;
 
 -- name: SetOrderPreparing :exec
-UPDATE pedido
-SET estado = (SELECT id FROM estadosPedidos WHERE nombre = 'En preparación')
-WHERE id = $1;
+UPDATE pedido p
+SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
+WHERE p.id = $1;
 
 -- name: SetOrderDelivered :exec
-UPDATE pedido
-SET estado = (SELECT id FROM estadosPedidos WHERE nombre = 'Entregado')
-WHERE id = $1;
+UPDATE pedido p
+SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'Entregado')
+WHERE p.id = $1;
 
 -- MESERO
 -- name: CreateClient :one
-INSERT INTO cliente VALUES (default, $1, $2, $3) RETURNING *;
+INSERT INTO cliente (nombre, direccion, nit) VALUES ($1, $2, $3) RETURNING *;
 
 -- name: OpenAccount :one
-INSERT INTO cuenta VALUES (default, $1, false, $2) RETURNING *;
+INSERT INTO cuenta (mesa, estaCerrada, numPersonas) VALUES ($1, false, $2) RETURNING *;
 
 -- name: TakeOrder :one
-INSERT INTO pedido VALUES 
-(default, NOW(), (SELECT id FROM estadosPedidos WHERE nombre = 'Pedido'), $1, $2, $3)
+INSERT INTO pedido (fecha, estado, cantidad, cuenta, item) VALUES 
+(NOW(), (SELECT id FROM estadosPedidos WHERE nombre = 'Pedido'), $1, $2, $3)
 RETURNING *;
 
 -- name: CloseAccount :exec
@@ -138,17 +138,17 @@ WHERE estaCerrada = false;
 SELECT * FROM cliente;
 
 -- name: GenerateBill :one
-INSERT INTO factura VALUES (default, NOW(), $1, $2)
+INSERT INTO factura (fecha, cuenta, cliente) VALUES (NOW(), $1, $2)
 RETURNING *;
 
 -- name: GetClient :one
 SELECT * FROM cliente WHERE id=$1;
 
 -- name: AddPayment :exec
-INSERT INTO pago VALUES ($1, $2, $3);
+INSERT INTO pago (tipo, monto, factura) VALUES ($1, $2, $3);
 
 -- name: TakeSurvey :exec
-INSERT INTO encuesta VALUES ($1, $2, $3, $4, NOW());
+INSERT INTO encuesta (empleado, cliente, gradoAmabilidad, gradoExactitud, fecha) VALUES ($1, $2, $3, $4, NOW());
 
 --CHEF --Get Pending Dishes
 --Para platillos CHEF

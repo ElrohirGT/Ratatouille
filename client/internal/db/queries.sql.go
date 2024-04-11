@@ -11,6 +11,112 @@ import (
 	"time"
 )
 
+const addPayment = `-- name: AddPayment :exec
+INSERT INTO pago (tipo, monto, factura) VALUES ($1, $2, $3)
+`
+
+type AddPaymentParams struct {
+	Tipo    int32
+	Monto   float64
+	Factura int32
+}
+
+func (q *Queries) AddPayment(ctx context.Context, arg AddPaymentParams) error {
+	_, err := q.db.ExecContext(ctx, addPayment, arg.Tipo, arg.Monto, arg.Factura)
+	return err
+}
+
+const closeAccount = `-- name: CloseAccount :exec
+UPDATE cuenta
+SET estaCerrada = true
+WHERE numCuenta = $1
+`
+
+func (q *Queries) CloseAccount(ctx context.Context, numcuenta int32) error {
+	_, err := q.db.ExecContext(ctx, closeAccount, numcuenta)
+	return err
+}
+
+const createClient = `-- name: CreateClient :one
+INSERT INTO cliente (nombre, direccion, nit) VALUES ($1, $2, $3) RETURNING id, nombre, direccion, nit
+`
+
+type CreateClientParams struct {
+	Nombre    string
+	Direccion sql.NullString
+	Nit       string
+}
+
+// MESERO
+func (q *Queries) CreateClient(ctx context.Context, arg CreateClientParams) (Cliente, error) {
+	row := q.db.QueryRowContext(ctx, createClient, arg.Nombre, arg.Direccion, arg.Nit)
+	var i Cliente
+	err := row.Scan(
+		&i.ID,
+		&i.Nombre,
+		&i.Direccion,
+		&i.Nit,
+	)
+	return i, err
+}
+
+const generateBill = `-- name: GenerateBill :one
+INSERT INTO factura (fecha, cuenta, cliente) VALUES (NOW(), $1, $2)
+RETURNING numfactura, fecha, cuenta, cliente
+`
+
+type GenerateBillParams struct {
+	Cuenta  int32
+	Cliente int32
+}
+
+func (q *Queries) GenerateBill(ctx context.Context, arg GenerateBillParams) (Factura, error) {
+	row := q.db.QueryRowContext(ctx, generateBill, arg.Cuenta, arg.Cliente)
+	var i Factura
+	err := row.Scan(
+		&i.Numfactura,
+		&i.Fecha,
+		&i.Cuenta,
+		&i.Cliente,
+	)
+	return i, err
+}
+
+const getActiveAccounts = `-- name: GetActiveAccounts :many
+SELECT mesa, numcuenta, estacerrada, numpersonas, total
+FROM cuenta
+WHERE estaCerrada = false
+`
+
+func (q *Queries) GetActiveAccounts(ctx context.Context) ([]Cuentum, error) {
+	rows, err := q.db.QueryContext(ctx, getActiveAccounts)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Cuentum
+	for rows.Next() {
+		var i Cuentum
+		if err := rows.Scan(
+			&i.Mesa,
+			&i.Numcuenta,
+			&i.Estacerrada,
+			&i.Numpersonas,
+			&i.Total,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAverageTimeToEatPerClientQuantity = `-- name: GetAverageTimeToEatPerClientQuantity :many
 
 SELECT
@@ -45,6 +151,54 @@ func (q *Queries) GetAverageTimeToEatPerClientQuantity(ctx context.Context, arg 
 	for rows.Next() {
 		var i GetAverageTimeToEatPerClientQuantityRow
 		if err := rows.Scan(&i.Numpersonas, &i.Timetoeat); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getClient = `-- name: GetClient :one
+SELECT id, nombre, direccion, nit FROM cliente WHERE id=$1
+`
+
+func (q *Queries) GetClient(ctx context.Context, id int32) (Cliente, error) {
+	row := q.db.QueryRowContext(ctx, getClient, id)
+	var i Cliente
+	err := row.Scan(
+		&i.ID,
+		&i.Nombre,
+		&i.Direccion,
+		&i.Nit,
+	)
+	return i, err
+}
+
+const getClients = `-- name: GetClients :many
+SELECT id, nombre, direccion, nit FROM cliente
+`
+
+func (q *Queries) GetClients(ctx context.Context) ([]Cliente, error) {
+	rows, err := q.db.QueryContext(ctx, getClients)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Cliente
+	for rows.Next() {
+		var i Cliente
+		if err := rows.Scan(
+			&i.ID,
+			&i.Nombre,
+			&i.Direccion,
+			&i.Nit,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -252,6 +406,76 @@ func (q *Queries) GetMostFamousDishesBetween(ctx context.Context, arg GetMostFam
 	return items, nil
 }
 
+const getPendingDrinks = `-- name: GetPendingDrinks :many
+SELECT p.id, fecha, estado, cantidad, cuenta, item, e.id, e.nombre, im.id, im.nombre, descripcion, preciounitario, categoria, imc.id, imc.nombre
+FROM pedido p
+	INNER JOIN estadosPedidos e ON p.estado = e.id
+	INNER JOIN itemMenu im ON p.item = im.id
+	INNER JOIN itemMenuCategoria imc ON im.categoria = imc.id
+WHERE 
+	imc.nombre = 'Bebidas' 
+	AND e.nombre = 'Pedido'
+ORDER BY p.fecha DESC
+`
+
+type GetPendingDrinksRow struct {
+	ID             int32
+	Fecha          time.Time
+	Estado         int32
+	Cantidad       int32
+	Cuenta         int32
+	Item           int32
+	ID_2           int32
+	Nombre         string
+	ID_3           int32
+	Nombre_2       string
+	Descripcion    string
+	Preciounitario string
+	Categoria      int32
+	ID_4           int32
+	Nombre_3       string
+}
+
+// BARTENDER
+func (q *Queries) GetPendingDrinks(ctx context.Context) ([]GetPendingDrinksRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPendingDrinks)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPendingDrinksRow
+	for rows.Next() {
+		var i GetPendingDrinksRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Fecha,
+			&i.Estado,
+			&i.Cantidad,
+			&i.Cuenta,
+			&i.Item,
+			&i.ID_2,
+			&i.Nombre,
+			&i.ID_3,
+			&i.Nombre_2,
+			&i.Descripcion,
+			&i.Preciounitario,
+			&i.Categoria,
+			&i.ID_4,
+			&i.Nombre_3,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getRoleOfUser = `-- name: GetRoleOfUser :many
 
 SELECT 
@@ -319,4 +543,132 @@ func (q *Queries) GetRushHourBetween(ctx context.Context, arg GetRushHourBetween
 	var i GetRushHourBetweenRow
 	err := row.Scan(&i.Horario, &i.Count)
 	return i, err
+}
+
+const logIn = `-- name: LogIn :one
+SELECT t.nombre
+FROM usuario u
+	INNER JOIN tipoUsuario t ON u.tipo = t.id
+WHERE u.nombre = $1 AND u.contraseña = $2
+LIMIT 1
+`
+
+type LogInParams struct {
+	Nombre     string
+	Contraseña string
+}
+
+func (q *Queries) LogIn(ctx context.Context, arg LogInParams) (string, error) {
+	row := q.db.QueryRowContext(ctx, logIn, arg.Nombre, arg.Contraseña)
+	var nombre string
+	err := row.Scan(&nombre)
+	return nombre, err
+}
+
+const openAccount = `-- name: OpenAccount :one
+INSERT INTO cuenta (mesa, estaCerrada, numPersonas) VALUES ($1, false, $2) RETURNING mesa, numcuenta, estacerrada, numpersonas, total
+`
+
+type OpenAccountParams struct {
+	Mesa        int32
+	Numpersonas int32
+}
+
+func (q *Queries) OpenAccount(ctx context.Context, arg OpenAccountParams) (Cuentum, error) {
+	row := q.db.QueryRowContext(ctx, openAccount, arg.Mesa, arg.Numpersonas)
+	var i Cuentum
+	err := row.Scan(
+		&i.Mesa,
+		&i.Numcuenta,
+		&i.Estacerrada,
+		&i.Numpersonas,
+		&i.Total,
+	)
+	return i, err
+}
+
+const setOrderDelivered = `-- name: SetOrderDelivered :exec
+UPDATE pedido p
+SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'Entregado')
+WHERE p.id = $1
+`
+
+func (q *Queries) SetOrderDelivered(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, setOrderDelivered, id)
+	return err
+}
+
+const setOrderPreparing = `-- name: SetOrderPreparing :exec
+UPDATE pedido p
+SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
+WHERE p.id = $1
+`
+
+func (q *Queries) SetOrderPreparing(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, setOrderPreparing, id)
+	return err
+}
+
+const signIn = `-- name: SignIn :exec
+INSERT INTO 
+	usuario (nombre, contraseña, tipo) 
+VALUES ($1, $2, $3)
+`
+
+type SignInParams struct {
+	Nombre     string
+	Contraseña string
+	Tipo       int32
+}
+
+func (q *Queries) SignIn(ctx context.Context, arg SignInParams) error {
+	_, err := q.db.ExecContext(ctx, signIn, arg.Nombre, arg.Contraseña, arg.Tipo)
+	return err
+}
+
+const takeOrder = `-- name: TakeOrder :one
+INSERT INTO pedido (fecha, estado, cantidad, cuenta, item) VALUES 
+(NOW(), (SELECT id FROM estadosPedidos WHERE nombre = 'Pedido'), $1, $2, $3)
+RETURNING id, fecha, estado, cantidad, cuenta, item
+`
+
+type TakeOrderParams struct {
+	Cantidad int32
+	Cuenta   int32
+	Item     int32
+}
+
+func (q *Queries) TakeOrder(ctx context.Context, arg TakeOrderParams) (Pedido, error) {
+	row := q.db.QueryRowContext(ctx, takeOrder, arg.Cantidad, arg.Cuenta, arg.Item)
+	var i Pedido
+	err := row.Scan(
+		&i.ID,
+		&i.Fecha,
+		&i.Estado,
+		&i.Cantidad,
+		&i.Cuenta,
+		&i.Item,
+	)
+	return i, err
+}
+
+const takeSurvey = `-- name: TakeSurvey :exec
+INSERT INTO encuesta (empleado, cliente, gradoAmabilidad, gradoExactitud, fecha) VALUES ($1, $2, $3, $4, NOW())
+`
+
+type TakeSurveyParams struct {
+	Empleado        int32
+	Cliente         int32
+	Gradoamabilidad int32
+	Gradoexactitud  int32
+}
+
+func (q *Queries) TakeSurvey(ctx context.Context, arg TakeSurveyParams) error {
+	_, err := q.db.ExecContext(ctx, takeSurvey,
+		arg.Empleado,
+		arg.Cliente,
+		arg.Gradoamabilidad,
+		arg.Gradoexactitud,
+	)
+	return err
 }
