@@ -8,6 +8,7 @@ import (
 	"github.com/ElrohirGT/Ratatouille/internal/tui/components"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/global"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/styles"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/views/waitress"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -40,7 +41,16 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
 	case global.SuccesDB:
-		return CreateAuthView(), nil
+		switch global.Role {
+		case "Mesero":
+			return waitress.CreateWaitressView(), nil
+		case "Chef":
+			return m, nil
+		case "Bartender":
+			return m, nil
+		case "Encargado":
+			return m, nil
+		}
 	}
 
 	return m, cmds
@@ -74,7 +84,8 @@ func LoginUser(username, password string) tea.Cmd {
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {
-			global.Username = v
+			global.Role = v.Tipousuario
+			global.Id = int(v.Idempleado)
 			return global.SuccesDB{Description: "User created correctly"}
 		}
 	}

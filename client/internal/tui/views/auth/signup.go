@@ -16,6 +16,7 @@ type SignUpModel struct {
 	forms    components.FormsModel
 	username string
 	password string
+	employee string
 	role     string
 	errorMsg string
 }
@@ -39,8 +40,9 @@ func (m SignUpModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.username = m.forms.FormInputs["Username"].Value
 			m.password = m.forms.FormInputs["Password"].Value
 			m.role = m.forms.FormInputs["Role"].Value
+			m.employee = m.forms.FormInputs["EmployeeID"].Value
 
-			return m, handleSignUser(m.username, m.password, m.role)
+			return m, handleSignUser(m.username, m.password, m.role, m.employee)
 		}
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
@@ -63,25 +65,27 @@ func (m SignUpModel) View() string {
 	return b.String()
 }
 
-func handleSignUser(username, password, role string) tea.Cmd {
+func handleSignUser(username, password, role, employeeID string) tea.Cmd {
 
-	if username == "" || password == "" || role == "" {
+	if username == "" || password == "" || role == "" || employeeID == "" {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Cannot have empty fields!"}
 		}
 	}
 
-	v, err := strconv.Atoi(role)
-	if err != nil {
+	tipo, err := strconv.Atoi(role)
+	empleado, err2 := strconv.Atoi(employeeID)
+
+	if err != nil || err2 != nil {
 		return func() tea.Msg {
-			return global.ErrorDB{Description: "Role must be an integer between 1 and 4"}
+			return global.ErrorDB{Description: "Role and Employee must be integers!"}
 		}
 	}
 
 	return func() tea.Msg {
 		encryptedPassword := global.EncryptSHA256(password)
 		err := global.Driver.SignIn(context.Background(),
-			db.SignInParams{Nombre: username, Contraseña: encryptedPassword, Tipo: int32(v)})
+			db.SignInParams{Nombre: username, Contraseña: encryptedPassword, Tipo: int32(tipo), Empleado: int32(empleado)} )
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {

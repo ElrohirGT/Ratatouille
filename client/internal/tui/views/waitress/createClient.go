@@ -3,10 +3,12 @@ package waitress
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/components"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/global"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/styles"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -15,6 +17,7 @@ type CreateClientView struct {
 	name    string
 	nit     string
 	address string
+	errorMsg string
 }
 
 func (m CreateClientView) Init() tea.Cmd {
@@ -22,9 +25,6 @@ func (m CreateClientView) Init() tea.Cmd {
 }
 
 func (m CreateClientView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-
-	newForm, cmds := m.forms.Update(msg)
-	m.forms = newForm.(components.FormsModel)
 
 	switch newMsg := msg.(type) {
 	case tea.KeyMsg:
@@ -38,14 +38,30 @@ func (m CreateClientView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			
 			return m, handleCreateClient(m.name, m.nit, m.address)
 		}
+
+		newForm, cmds := m.forms.Update(msg)
+		m.forms = newForm.(components.FormsModel)
+		return m, cmds
+
+	case global.ErrorDB:
+		m.errorMsg = newMsg.Description
+	case global.SuccesDB:
+		return CreateWaitressView(), nil
 	}
 
-	return m, cmds
+	return m, nil
 }
 
 func (m CreateClientView) View() string {
+	var b strings.Builder
 
-	return m.forms.View()
+	b.WriteString(m.forms.View() + "\n\n")
+
+	if m.errorMsg != "" {
+		b.WriteString(styles.GetErrorStyle().Render(m.errorMsg))
+	}
+
+	return b.String()
 }
 
 func handleCreateClient(name, NIT, address string) tea.Cmd {

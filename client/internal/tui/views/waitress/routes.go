@@ -14,7 +14,7 @@ func CreateWaitressView() WaitressModel {
 func CreateCreateClientView() CreateClientView {
 	newForm := components.CreateForms("Create Client", map[string]components.FormsInput{
 		"Name":    {Placeholder: "Hector Hurtarte"},
-		"NIT":     {Placeholder: "XXXXXXXXX", InputType: "password"},
+		"NIT":     {Placeholder: "XXXXXXXXX"},
 		"Address": {Placeholder: "Guatemala city"},
 	})
 	return CreateClientView{forms: newForm}

@@ -39,5 +39,5 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 func (m WaitressModel) View() string {
-	return m.Menu.View() + "\n" + fmt.Sprintf("%d %s %s", global.Id, global.Role, global.Username)
+	return m.Menu.View() + "\n" + fmt.Sprintf("%d %s", global.Id, global.Role)
 }

@@ -43,5 +43,5 @@ func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 func (m AuthModel) View() string {
-	return m.Menu.View() + "\n" + fmt.Sprintf(global.Username)
+	return m.Menu.View() + "\n" + fmt.Sprintf(global.Role)
 }

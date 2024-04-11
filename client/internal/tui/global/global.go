@@ -4,8 +4,7 @@ import "github.com/ElrohirGT/Ratatouille/internal/db"
 
 var (
 	Id       int
-	Username string
-	Role     int
+	Role     string
 
 	Driver *db.Queries
 )
