@@ -18,3 +18,12 @@ func CreateAuthView() AuthModel {
 	menu := components.CreateMenu("Ratatouille", menuItems)
 	return AuthModel{Menu: menu}
 }
+
+func CreateSignInView() SignInModel {
+	newForm := components.CreateForms("Sign In", map[string]components.FormsInput{
+		"Username": {Placeholder: "Hector Hurtarte"},
+		"Password": {Placeholder: "password", InputType: "password"},
+		"Role":     {Placeholder: "Mesero, Chef..."},
+	})
+	return SignInModel{forms: newForm}
+}

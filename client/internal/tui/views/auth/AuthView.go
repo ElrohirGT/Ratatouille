@@ -30,11 +30,10 @@ func (m AuthModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if newMsg.Type == tea.KeyEnter {
 			switch m.Menu.FocusItem.Route {
 			case "Login":
-				fmt.Println("YOU PRESS ME")
-				return m, cmd
-			case "SignUp":
 				fmt.Println("YOU PRESS ME 2")
 				return m, cmd
+			case "SignUp":
+				return CreateSignInView(), nil
 			}
 		}
 		return m, cmd
