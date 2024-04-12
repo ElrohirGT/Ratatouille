@@ -3,8 +3,8 @@ package global
 import "github.com/ElrohirGT/Ratatouille/internal/db"
 
 var (
-	Id       int
-	Role     string
+	Id   int
+	Role string
 
 	Driver *db.Queries
 )

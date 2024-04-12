@@ -2,7 +2,7 @@ package waitress
 
 import (
 	"context"
-	"database/sql"
+	"strconv"
 	"strings"
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
@@ -12,19 +12,18 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type CreateClientView struct {
-	forms    components.FormsModel
-	name     string
-	nit      string
-	address  string
-	errorMsg string
+type OpenAccountView struct {
+	forms       components.FormsModel
+	numTable        string
+	numPeople string
+	errorMsg    string
 }
 
-func (m CreateClientView) Init() tea.Cmd {
+func (m OpenAccountView) Init() tea.Cmd {
 	return nil
 }
 
-func (m CreateClientView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m OpenAccountView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch newMsg := msg.(type) {
 	case tea.KeyMsg:
@@ -32,11 +31,10 @@ func (m CreateClientView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return CreateWaitressView(), nil
 		}
 		if newMsg.Type == tea.KeyEnter {
-			m.name = m.forms.FormInputs["Name"].Value
-			m.nit = m.forms.FormInputs["NIT"].Value
-			m.address = m.forms.FormInputs["Address"].Value
+			m.numTable = m.forms.FormInputs["Mesa"].Value
+			m.numPeople = m.forms.FormInputs["numPersonas"].Value
 
-			return m, handleCreateClient(m.name, m.nit, m.address)
+			return m, handleOpenAccount(m.numTable, m.numPeople)
 		}
 
 		newForm, cmds := m.forms.Update(msg)
@@ -52,7 +50,7 @@ func (m CreateClientView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m CreateClientView) View() string {
+func (m OpenAccountView) View() string {
 	var b strings.Builder
 
 	b.WriteString(m.forms.View() + "\n\n")
@@ -64,20 +62,29 @@ func (m CreateClientView) View() string {
 	return b.String()
 }
 
-func handleCreateClient(name, NIT, address string) tea.Cmd {
-	if name == "" || NIT == "" || address == "" {
+func handleOpenAccount(table, numPeople string) tea.Cmd {
+	if table == "" || numPeople == "" {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Cannot have empty fields!"}
 		}
 	}
+	
+	tableConverted, err := strconv.Atoi(table)
+	numPeopleConverted, err2 := strconv.Atoi(numPeople)
+
+	if err != nil || err2 != nil {
+		return func() tea.Msg {
+			return global.ErrorDB{Description: "Table and numPeople must be integers!"}
+		}
+	}
 
 	return func() tea.Msg {
-		_, err := global.Driver.CreateClient(context.Background(),
-			db.CreateClientParams{Nombre: name, Nit: NIT, Direccion: sql.NullString{String: address, Valid: true}})
+		_, err := global.Driver.OpenAccount(context.Background(),
+			db.OpenAccountParams(db.OpenAccountParams{Mesa: int32(tableConverted), Numpersonas: int32(numPeopleConverted)}))
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {
-			return global.SuccesDB{Description: "Client created correctly"}
+			return global.SuccesDB{Description: "Open account correctly"}
 		}
 	}
 

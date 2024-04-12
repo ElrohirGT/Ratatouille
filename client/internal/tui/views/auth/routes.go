@@ -16,10 +16,10 @@ func CreateAuthView() AuthModel {
 
 func CreateSignUpView() SignUpModel {
 	newForm := components.CreateForms("Sign Up", map[string]components.FormsInput{
-		"Username": {Placeholder: "Hector Hurtarte"},
-		"Password": {Placeholder: "password", InputType: "password"},
-		"Role":     {Placeholder: "1 (Mesero), 2 (Encargado), 3 (Chef), 4 (Bartender)"},
-		"EmployeeID":     {Placeholder: "XXX"},
+		"Username":   {Placeholder: "Hector Hurtarte"},
+		"Password":   {Placeholder: "password", InputType: "password"},
+		"Role":       {Placeholder: "1 (Mesero), 2 (Encargado), 3 (Chef), 4 (Bartender)"},
+		"EmployeeID": {Placeholder: "XXX"},
 	})
 	return SignUpModel{forms: newForm}
 }

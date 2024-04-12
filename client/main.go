@@ -31,6 +31,5 @@ func main() {
 		fmt.Printf("An Error happened: %v", err)
 		os.Exit(1)
 	}
-	
 
 }

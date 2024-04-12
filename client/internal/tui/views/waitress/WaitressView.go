@@ -29,6 +29,8 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch m.Menu.SelectedItem.Route {
 			case "createClient":
 				return CreateCreateClientView(), nil
+			case "openAccount":
+				return CreateOpenAccountView(), nil
 			}
 		}
 		newMenu, cmd := m.Menu.Update(msg)
