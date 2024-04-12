@@ -387,6 +387,51 @@ func (q *Queries) GetEmployees(ctx context.Context) ([]Empleado, error) {
 	return items, nil
 }
 
+const getMenuItems = `-- name: GetMenuItems :many
+SELECT im.id, im.nombre, im.descripcion, im.preciounitario, im.categoria, imc.nombre as NombreCategoria
+FROM itemMenu im
+	INNER JOIN itemmenucategoria imc ON im.categoria = imc.id
+`
+
+type GetMenuItemsRow struct {
+	ID              int32
+	Nombre          string
+	Descripcion     string
+	Preciounitario  string
+	Categoria       int32
+	Nombrecategoria string
+}
+
+func (q *Queries) GetMenuItems(ctx context.Context) ([]GetMenuItemsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getMenuItems)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetMenuItemsRow
+	for rows.Next() {
+		var i GetMenuItemsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Nombre,
+			&i.Descripcion,
+			&i.Preciounitario,
+			&i.Categoria,
+			&i.Nombrecategoria,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getMostFamousDishesBetween = `-- name: GetMostFamousDishesBetween :many
 
 SELECT p.item, i.nombre, i.descripcion, COUNT(p) as count
@@ -424,6 +469,59 @@ func (q *Queries) GetMostFamousDishesBetween(ctx context.Context, arg GetMostFam
 			&i.Nombre,
 			&i.Descripcion,
 			&i.Count,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getPendingDishes = `-- name: GetPendingDishes :many
+SELECT 
+	IM.id,
+	P.fecha,
+	IM.nombre, 
+	P.cantidad,
+	EP.nombre
+FROM pedido P
+	INNER JOIN estadosPedidos EP on P.estado = EP.id
+	INNER JOIN itemMenu IM on P.item = IM.id
+	inner join itemmenucategoria IMC on IM.categoria = IMC.id
+where (EP.nombre = 'En espera' or EP.nombre = 'Cocinado') and IM.categoria = 1
+`
+
+type GetPendingDishesRow struct {
+	ID       int32
+	Fecha    time.Time
+	Nombre   string
+	Cantidad int32
+	Nombre_2 string
+}
+
+// CHEF --Get Pending Dishes
+// Para platillos CHEF
+func (q *Queries) GetPendingDishes(ctx context.Context) ([]GetPendingDishesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPendingDishes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPendingDishesRow
+	for rows.Next() {
+		var i GetPendingDishesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Fecha,
+			&i.Nombre,
+			&i.Cantidad,
+			&i.Nombre_2,
 		); err != nil {
 			return nil, err
 		}

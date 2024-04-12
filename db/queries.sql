@@ -156,6 +156,7 @@ INSERT INTO encuesta (empleado, cliente, gradoAmabilidad, gradoExactitud, fecha)
 
 --CHEF --Get Pending Dishes
 --Para platillos CHEF
+-- name: GetPendingDishes :many
 SELECT 
 	IM.id,
 	P.fecha,
@@ -168,6 +169,7 @@ FROM pedido P
 	inner join itemmenucategoria IMC on IM.categoria = IMC.id
 where (EP.nombre = 'En espera' or EP.nombre = 'Cocinado') and IM.categoria = 1 ;
 
-
-
-
+-- name: GetMenuItems :many
+SELECT im.*, imc.nombre as NombreCategoria
+FROM itemMenu im
+	INNER JOIN itemmenucategoria imc ON im.categoria = imc.id;
