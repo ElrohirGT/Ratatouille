@@ -13,18 +13,14 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var baseStyle = lipgloss.NewStyle().
-	BorderStyle(lipgloss.NormalBorder()).
-	BorderForeground(lipgloss.Color("240"))
-
-type getClientsViewModel struct {
+type getActiveAccountsModel struct {
 	table table.Model
 	errorMsg string
 }
 
-func (m getClientsViewModel) Init() tea.Cmd { return handleGetClients() }
+func (m getActiveAccountsModel) Init() tea.Cmd { return handleGetClients() }
 
-func (m getClientsViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m getActiveAccountsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -48,7 +44,7 @@ func (m getClientsViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.table, cmd = m.table.Update(msg)
 	return m, cmd
 }
-func (m getClientsViewModel) View() string {
+func (m getActiveAccountsModel) View() string {
 	var b strings.Builder
 
 	b.WriteString("\n\n")
@@ -68,34 +64,35 @@ func (m getClientsViewModel) View() string {
 	return b.String()
 } 
 
-func handleGetClients() tea.Cmd {
-	clients, err := global.Driver.GetClients(context.Background())
+func handleGetActiveAccounts() tea.Cmd {
+	accounts, err := global.Driver.GetActiveAccounts(context.Background())
 	if err != nil {
 		return func() tea.Msg {
-			return global.ErrorDB{Description: "Error retreiving clients"}
+			return global.ErrorDB{Description: "Error retreiving accounts"}
 		} 
 	} else {
-		table := parseClientsToTable(clients)
+		table := parseAccountsToTable(accounts)
 		return func() tea.Msg {
 			return table
 		} 
 	}
 }
 
-func parseClientsToTable(clients []db.Cliente) table.Model{
+func parseAccountsToTable(accounts []db.Cuentum) table.Model{
 	columns := []table.Column{
-		{Title: "ID", Width: 15},
-		{Title: "Nombre", Width: 30},
-		{Title: "Direccion", Width: 30},
-		{Title: "Nit", Width: 15},
+		{Title: "Table", Width: 15},
+		{Title: "NO. Account", Width: 30},
+		{Title: "Total", Width: 30},
 	}
 
-	rows := make([]table.Row, len(clients))
+	rows := make([]table.Row, len(accounts))
 	
-	for i := range clients {
-		client := clients[i]
-		fmt.Println(string(client.ID))
-		rows[i] = table.Row{ fmt.Sprint(client.ID), client.Nombre, client.Direccion.String ,client.Nit }
+	for i := range accounts{
+		account := accounts[i]
+		rows[i] = table.Row{ 
+			fmt.Sprint(account.Mesa) , 
+			fmt.Sprint(account.Numcuenta), 
+			"$"+fmt.Sprint(account.Total) }
 	}	
 
 	t := table.New(

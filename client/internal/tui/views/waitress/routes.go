@@ -40,3 +40,7 @@ func CreateOpenAccountView() OpenAccountView{
 func CreateGetClientsView() getClientsViewModel{
 	return getClientsViewModel{table: table.New()}
 }
+
+func CreateGetActiveAccounts() getActiveAccountsModel{
+	return getActiveAccountsModel{table: table.New()}
+}
