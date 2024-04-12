@@ -1,6 +1,9 @@
 package waitress
 
-import "github.com/ElrohirGT/Ratatouille/internal/tui/components"
+import (
+	"github.com/ElrohirGT/Ratatouille/internal/tui/components"
+	"github.com/charmbracelet/bubbles/table"
+)
 
 func CreateWaitressView() WaitressModel {
 	menuItems := []components.MenuItem{
@@ -32,4 +35,8 @@ func CreateOpenAccountView() OpenAccountView{
 		"numPersonas":     {Placeholder: "Between 6 an 14"},
 	})
 	return OpenAccountView{forms: newForm}
+}
+
+func CreateGetClientsView() getClientsViewModel{
+	return getClientsViewModel{table: table.New()}
 }

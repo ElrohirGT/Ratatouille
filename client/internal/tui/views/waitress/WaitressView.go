@@ -18,6 +18,8 @@ func (m WaitressModel) Init() tea.Cmd {
 
 func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
+	tea.ClearScreen()
+	
 	switch newMsg := msg.(type) {
 	case tea.KeyMsg:
 
@@ -36,7 +38,7 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "getActiveAccounts":
 				return m, nil
 			case "getClients":
-				return m, nil
+				return CreateGetClientsView(), handleGetClients()
 			case "generateBills":
 				return m, nil
 			case "registerComplain":
