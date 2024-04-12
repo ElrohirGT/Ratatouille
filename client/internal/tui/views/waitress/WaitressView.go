@@ -31,6 +31,16 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return CreateCreateClientView(), nil
 			case "openAccount":
 				return CreateOpenAccountView(), nil
+			case "takeOrder":
+				return m, nil
+			case "getActiveAccounts":
+				return m, nil
+			case "getClients":
+				return m, nil
+			case "generateBills":
+				return m, nil
+			case "registerComplain":
+				return m, nil
 			}
 		}
 		newMenu, cmd := m.Menu.Update(msg)

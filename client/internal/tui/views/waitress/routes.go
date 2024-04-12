@@ -6,6 +6,11 @@ func CreateWaitressView() WaitressModel {
 	menuItems := []components.MenuItem{
 		{Route: "createClient", ItemTitle: "Create Client", ItemDescription: "Registers a new client to the records."},
 		{Route: "openAccount", ItemTitle: "Open Account", ItemDescription: "Create and account for a client to start order."},
+		{Route: "takeOrder", ItemTitle: "Take Order", ItemDescription: "Ask the chef for a new food for a table"},
+		{Route: "getActiveAccounts", ItemTitle: "Show Active accounts", ItemDescription: "Show accounts that are ordering dishes"},
+		{Route: "getClients", ItemTitle: "Show Clients", ItemDescription: "Show all existing clients"},
+		{Route: "generateBill", ItemTitle: "Generate Bill", ItemDescription: "Generate the Bill, close the account and pass the survey"},
+		{Route: "registerComplain", ItemTitle: "Register Complain", ItemDescription: "Register a complain from a client"},
 	}
 
 	menu := components.CreateMenu("Waitress Management", menuItems)
