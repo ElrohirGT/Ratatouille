@@ -142,7 +142,7 @@ SELECT * FROM cliente;
 SELECT * FROM empleado;
 
 -- name: GenerateBill :one
-INSERT INTO factura (fecha, cuenta, cliente) VALUES (NOW(), $1, $2)
+INSERT INTO factura (fecha, cuenta, cliente, total) VALUES (NOW(), $1, $2, (select total from cuenta where numCuenta = $1))
 RETURNING *;
 
 -- name: GetClient :one
@@ -171,7 +171,6 @@ FROM pedido P
 	INNER JOIN itemMenu IM on P.item = IM.id
 	inner join itemmenucategoria IMC on IM.categoria = IMC.id
 where (EP.nombre = 'En espera' or EP.nombre = 'Cocinado') and IM.categoria = 1 ;
-
 -- name: GetMenuItems :many
 SELECT im.*, imc.nombre as NombreCategoria
 FROM itemMenu im
