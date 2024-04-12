@@ -724,14 +724,13 @@ func (q *Queries) OpenAccount(ctx context.Context, arg OpenAccountParams) (Cuent
 }
 
 const registerComplaint = `-- name: RegisterComplaint :exec
-INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1, $2, $3, $4, $5, $6)
+INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1, $2, $3, NOW(), $4, $5)
 `
 
 type RegisterComplaintParams struct {
 	Cliente  int32
 	Gravedad int32
 	Motivo   string
-	Fecha    time.Time
 	Empleado sql.NullInt32
 	Item     sql.NullInt32
 }
@@ -741,7 +740,6 @@ func (q *Queries) RegisterComplaint(ctx context.Context, arg RegisterComplaintPa
 		arg.Cliente,
 		arg.Gravedad,
 		arg.Motivo,
-		arg.Fecha,
 		arg.Empleado,
 		arg.Item,
 	)

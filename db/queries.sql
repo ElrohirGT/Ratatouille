@@ -155,7 +155,7 @@ INSERT INTO pago (tipo, monto, factura) VALUES ($1, $2, $3);
 INSERT INTO encuesta (empleado, cliente, gradoAmabilidad, gradoExactitud, fecha) VALUES ($1, $2, $3, $4, NOW());
 
 -- name: RegisterComplaint :exec
-INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1, $2, $3, $4, $5, $6);
+INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1, $2, $3, NOW(), $4, $5);
 
 --CHEF --Get Pending Dishes
 --Para platillos CHEF
