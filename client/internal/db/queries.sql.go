@@ -723,6 +723,31 @@ func (q *Queries) OpenAccount(ctx context.Context, arg OpenAccountParams) (Cuent
 	return i, err
 }
 
+const registerComplaint = `-- name: RegisterComplaint :exec
+INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1, $2, $3, $4, $5, $6)
+`
+
+type RegisterComplaintParams struct {
+	Cliente  int32
+	Gravedad int32
+	Motivo   string
+	Fecha    time.Time
+	Empleado sql.NullInt32
+	Item     sql.NullInt32
+}
+
+func (q *Queries) RegisterComplaint(ctx context.Context, arg RegisterComplaintParams) error {
+	_, err := q.db.ExecContext(ctx, registerComplaint,
+		arg.Cliente,
+		arg.Gravedad,
+		arg.Motivo,
+		arg.Fecha,
+		arg.Empleado,
+		arg.Item,
+	)
+	return err
+}
+
 const setOrderDelivered = `-- name: SetOrderDelivered :exec
 UPDATE pedido p
 SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'Entregado')

@@ -154,6 +154,9 @@ INSERT INTO pago (tipo, monto, factura) VALUES ($1, $2, $3);
 -- name: TakeSurvey :exec
 INSERT INTO encuesta (empleado, cliente, gradoAmabilidad, gradoExactitud, fecha) VALUES ($1, $2, $3, $4, NOW());
 
+-- name: RegisterComplaint :exec
+INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1, $2, $3, $4, $5, $6);
+
 --CHEF --Get Pending Dishes
 --Para platillos CHEF
 -- name: GetPendingDishes :many
