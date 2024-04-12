@@ -12,6 +12,7 @@ func CreateWaitressView() WaitressModel {
 		{Route: "takeOrder", ItemTitle: "Take Order", ItemDescription: "Ask the chef for a new food for a table"},
 		{Route: "getActiveAccounts", ItemTitle: "Show Active accounts", ItemDescription: "Show accounts that are ordering dishes"},
 		{Route: "getClients", ItemTitle: "Show Clients", ItemDescription: "Show all existing clients"},
+		{Route: "getMenuItems", ItemTitle: "Show Menu", ItemDescription: "Show all existing dishes and drinks options."},
 		{Route: "generateBill", ItemTitle: "Generate Bill", ItemDescription: "Generate the Bill, close the account and pass the survey"},
 		{Route: "registerComplain", ItemTitle: "Register Complain", ItemDescription: "Register a complain from a client"},
 	}
@@ -52,4 +53,8 @@ func CreateGetClientsView() getClientsViewModel {
 
 func CreateGetActiveAccounts() getActiveAccountsModel {
 	return getActiveAccountsModel{table: table.New()}
+}
+
+func CreateGetMenuItems() getMenuItemsViewModel {
+	return getMenuItemsViewModel{table: table.New()}
 }
