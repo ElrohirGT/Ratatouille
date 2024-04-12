@@ -47,6 +47,17 @@ func CreateTakeOrder() TakeOrderView {
 	return TakeOrderView{forms: newForm}
 }
 
+func CreateRegisterComplain() RegisterComplain {
+	newForm := components.CreateForms("Register Complain", map[string]components.FormsInput{
+		"Client":   {Placeholder: "1,2,3"},
+		"Severity": {Placeholder: "1 to 5"},
+		"Reason":   {Placeholder: "Because..." ,InputType: "text"},
+		"Employee": {Placeholder: "1,2,3..."},
+		"Item":     {Placeholder: "1,2,3..."},
+	})
+	return RegisterComplain{forms: newForm}
+}
+
 func CreateGetClientsView() getClientsViewModel {
 	return getClientsViewModel{table: table.New()}
 }

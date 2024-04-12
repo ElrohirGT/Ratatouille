@@ -36,7 +36,7 @@ func CreateConfirmation(
 		onNegation:     onNegation,
 		onSuccess:      onSuccess,
 		onError:        onError,
-		errorMsg: "",
+		errorMsg:       "",
 	}
 }
 

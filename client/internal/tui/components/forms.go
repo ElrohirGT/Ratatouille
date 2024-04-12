@@ -51,6 +51,8 @@ func CreateForms(title string, formsInputs map[string]FormsInput) FormsModel {
 		if v.InputType == "password" {
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
+		} else if v.InputType == "text" {
+			t.CharLimit = 80
 		}
 		m.inputs = append(m.inputs, t)
 	}

@@ -42,7 +42,7 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "generateBills":
 				return m, nil
 			case "registerComplain":
-				return m, nil
+				return CreateRegisterComplain(), nil
 			}
 		}
 		newMenu, cmd := m.Menu.Update(msg)

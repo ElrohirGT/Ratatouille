@@ -42,11 +42,11 @@ func (m TakeOrderView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			onSuccess := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
 			onError := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
 
-			return components.CreateConfirmation(renderOrder(m.account, m.item, m.amount), 
-			onConfirmation, 
-			onNegation, 
-			onSuccess, 
-			onError), nil
+			return components.CreateConfirmation(renderOrder(m.account, m.item, m.amount),
+				onConfirmation,
+				onNegation,
+				onSuccess,
+				onError), nil
 		}
 
 		newForm, cmds := m.forms.Update(msg)
@@ -107,5 +107,5 @@ func renderOrder(account, item, amount string) string {
 	Amount: %s units
 	=============================
 	CONFIRM?
-`, account, item, amount)	
+`, account, item, amount)
 }
