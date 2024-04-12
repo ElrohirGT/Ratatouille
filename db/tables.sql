@@ -45,7 +45,7 @@ create table cuenta (
 	numCuenta serial primary key,
 	estaCerrada boolean not null, 
 	numPersonas int not null,
-	total money not null default 0
+	total numeric not null default 0
 );
 
 
@@ -82,7 +82,7 @@ create table itemMenu (
 	id SERIAL primary key,
 	nombre varchar (30) not null,
 	descripcion text not null,
-	precioUnitario money not null,
+	precioUnitario numeric not null,
 	categoria int references itemMenuCategoria(id) on delete cascade not null
 );
 
