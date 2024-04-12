@@ -18,7 +18,7 @@ var baseStyle = lipgloss.NewStyle().
 	BorderForeground(lipgloss.Color("240"))
 
 type getClientsViewModel struct {
-	table table.Model
+	table    table.Model
 	errorMsg string
 }
 
@@ -52,13 +52,13 @@ func (m getClientsViewModel) View() string {
 	var b strings.Builder
 
 	b.WriteString("\n\n")
-	
+
 	b.WriteString(styles.GetTitleStyle().Render("Clients"))
 
 	b.WriteString("\n\n")
 
 	b.WriteString(baseStyle.Render(m.table.View()))
-	
+
 	b.WriteString("\n\n")
 
 	if m.errorMsg != "" {
@@ -66,23 +66,23 @@ func (m getClientsViewModel) View() string {
 	}
 
 	return b.String()
-} 
+}
 
 func handleGetClients() tea.Cmd {
 	clients, err := global.Driver.GetClients(context.Background())
 	if err != nil {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Error retreiving clients"}
-		} 
+		}
 	} else {
 		table := parseClientsToTable(clients)
 		return func() tea.Msg {
 			return table
-		} 
+		}
 	}
 }
 
-func parseClientsToTable(clients []db.Cliente) table.Model{
+func parseClientsToTable(clients []db.Cliente) table.Model {
 	columns := []table.Column{
 		{Title: "ID", Width: 15},
 		{Title: "Nombre", Width: 30},
@@ -91,12 +91,12 @@ func parseClientsToTable(clients []db.Cliente) table.Model{
 	}
 
 	rows := make([]table.Row, len(clients))
-	
+
 	for i := range clients {
 		client := clients[i]
 		fmt.Println(string(client.ID))
-		rows[i] = table.Row{ fmt.Sprint(client.ID), client.Nombre, client.Direccion.String ,client.Nit }
-	}	
+		rows[i] = table.Row{fmt.Sprint(client.ID), client.Nombre, client.Direccion.String, client.Nit}
+	}
 
 	t := table.New(
 		table.WithColumns(columns),
@@ -116,7 +116,7 @@ func parseClientsToTable(clients []db.Cliente) table.Model{
 		Background(lipgloss.Color("57")).
 		Bold(false)
 	t.SetStyles(s)
-	
+
 	return t
 }
 
@@ -132,5 +132,5 @@ func (m getClientsViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 func (m getClientsViewModel) View() string {
 	return ""
-} 
+}
 */

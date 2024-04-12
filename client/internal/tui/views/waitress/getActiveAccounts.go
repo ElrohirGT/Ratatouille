@@ -14,7 +14,7 @@ import (
 )
 
 type getActiveAccountsModel struct {
-	table table.Model
+	table    table.Model
 	errorMsg string
 }
 
@@ -48,13 +48,13 @@ func (m getActiveAccountsModel) View() string {
 	var b strings.Builder
 
 	b.WriteString("\n\n")
-	
+
 	b.WriteString(styles.GetTitleStyle().Render("Clients"))
 
 	b.WriteString("\n\n")
 
 	b.WriteString(baseStyle.Render(m.table.View()))
-	
+
 	b.WriteString("\n\n")
 
 	if m.errorMsg != "" {
@@ -62,23 +62,23 @@ func (m getActiveAccountsModel) View() string {
 	}
 
 	return b.String()
-} 
+}
 
 func handleGetActiveAccounts() tea.Cmd {
 	accounts, err := global.Driver.GetActiveAccounts(context.Background())
 	if err != nil {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Error retreiving accounts"}
-		} 
+		}
 	} else {
 		table := parseAccountsToTable(accounts)
 		return func() tea.Msg {
 			return table
-		} 
+		}
 	}
 }
 
-func parseAccountsToTable(accounts []db.Cuentum) table.Model{
+func parseAccountsToTable(accounts []db.Cuentum) table.Model {
 	columns := []table.Column{
 		{Title: "Table", Width: 15},
 		{Title: "NO. Account", Width: 30},
@@ -86,14 +86,14 @@ func parseAccountsToTable(accounts []db.Cuentum) table.Model{
 	}
 
 	rows := make([]table.Row, len(accounts))
-	
-	for i := range accounts{
+
+	for i := range accounts {
 		account := accounts[i]
-		rows[i] = table.Row{ 
-			fmt.Sprint(account.Mesa) , 
-			fmt.Sprint(account.Numcuenta), 
-			"$"+fmt.Sprint(account.Total) }
-	}	
+		rows[i] = table.Row{
+			fmt.Sprint(account.Mesa),
+			fmt.Sprint(account.Numcuenta),
+			"$" + fmt.Sprint(account.Total)}
+	}
 
 	t := table.New(
 		table.WithColumns(columns),
@@ -113,7 +113,7 @@ func parseAccountsToTable(accounts []db.Cuentum) table.Model{
 		Background(lipgloss.Color("57")).
 		Bold(false)
 	t.SetStyles(s)
-	
+
 	return t
 }
 
@@ -129,5 +129,5 @@ func (m getClientsViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 func (m getClientsViewModel) View() string {
 	return ""
-} 
+}
 */

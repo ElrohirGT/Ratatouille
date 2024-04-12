@@ -32,7 +32,7 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "openAccount":
 				return CreateOpenAccountView(), nil
 			case "takeOrder":
-				return m, nil
+				return CreateTakeOrder(), nil
 			case "getActiveAccounts":
 				return CreateGetActiveAccounts(), handleGetActiveAccounts()
 			case "getClients":

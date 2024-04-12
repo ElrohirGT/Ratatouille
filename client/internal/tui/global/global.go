@@ -1,6 +1,8 @@
 package global
 
-import "github.com/ElrohirGT/Ratatouille/internal/db"
+import (
+	"github.com/ElrohirGT/Ratatouille/internal/db"
+)
 
 var (
 	Id   int
@@ -14,4 +16,6 @@ type ErrorDB struct {
 }
 type SuccesDB struct {
 	Description string
+	Value       SuccessValue
 }
+type SuccessValue interface{}

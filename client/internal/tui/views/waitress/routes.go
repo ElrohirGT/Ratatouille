@@ -29,18 +29,27 @@ func CreateCreateClientView() CreateClientView {
 	return CreateClientView{forms: newForm}
 }
 
-func CreateOpenAccountView() OpenAccountView{
+func CreateOpenAccountView() OpenAccountView {
 	newForm := components.CreateForms("Open Account", map[string]components.FormsInput{
-		"Mesa":    {Placeholder: "1,2,3"},
-		"numPersonas":     {Placeholder: "Between 6 an 14"},
+		"Mesa":        {Placeholder: "1,2,3"},
+		"numPersonas": {Placeholder: "Less than 14"},
 	})
 	return OpenAccountView{forms: newForm}
 }
 
-func CreateGetClientsView() getClientsViewModel{
+func CreateTakeOrder() TakeOrderView {
+	newForm := components.CreateForms("Take Order", map[string]components.FormsInput{
+		"NO.account": {Placeholder: "XXX"},
+		"ItemID":     {Placeholder: "XXX"},
+		"Amount":     {Placeholder: "XXX"},
+	})
+	return TakeOrderView{forms: newForm}
+}
+
+func CreateGetClientsView() getClientsViewModel {
 	return getClientsViewModel{table: table.New()}
 }
 
-func CreateGetActiveAccounts() getActiveAccountsModel{
+func CreateGetActiveAccounts() getActiveAccountsModel {
 	return getActiveAccountsModel{table: table.New()}
 }
