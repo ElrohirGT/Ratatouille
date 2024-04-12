@@ -45,7 +45,7 @@ create table cuenta (
 	numCuenta serial primary key,
 	estaCerrada boolean not null, 
 	numPersonas int not null,
-	total float not null default 0
+	total money not null default 0
 );
 
 

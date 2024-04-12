@@ -77,37 +77,31 @@ ON cuenta
 FOR EACH ROW
 EXECUTE FUNCTION assert_max_personas();
 
--- Actualizacion de la suma total del pedido 
--- un pedido se ponga en una cuenta se agarre el precio unitario de la tabla itemMenu y 
---lo multiplique por la cantidad del pedido y eso es un total pero ese total se tiene que sumar por 
---todos los pedidos ingresados a la misma cuenta
---PENDIENTE DE REVISAR.
+
+
+-- Crea la funciin para actualizar el total acumulado en la tabla cuenta
 CREATE OR REPLACE FUNCTION actualizar_total_cuenta()
 RETURNS TRIGGER AS
 $BODY$
-DECLARE
-    total_pedido money;
-    total_cuenta money;
 BEGIN
-    -- Calcular el total del pedido
-    total_pedido := NEW.cantidad * (
-        SELECT precioUnitario FROM itemMenu WHERE id = NEW.item
-    );
-    
-    -- Actualizar el total de la cuenta sumando el total del pedido
-    UPDATE cuenta
-    SET total = total + total_pedido
-    WHERE numCuenta = NEW.cuenta;
+    -- Actualizar el campo total de la tabla cuenta
+    UPDATE cuenta AS c
+    SET total = (
+        SELECT SUM(IM.precioUnitario * p.cantidad) AS cantidad_total
+        FROM itemmenu IM
+        INNER JOIN pedido p ON IM.id = p.item
+        WHERE p.cuenta = NEW.cuenta
+        GROUP BY p.cuenta
+    )
+    WHERE c.numCuenta = NEW.cuenta;
     
     RETURN NEW;
 END;
 $BODY$
 LANGUAGE plpgsql;
 
--- Creación del trigger
-CREATE TRIGGER calcular_total_pedido
-AFTER INSERT OR UPDATE
-ON pedido
+-- Crear el trigger para despues de insertar o actualizar tabla pedido
+CREATE TRIGGER trigger_actualizar_total_cuenta
+AFTER INSERT OR UPDATE ON pedido
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_total_cuenta();
-
