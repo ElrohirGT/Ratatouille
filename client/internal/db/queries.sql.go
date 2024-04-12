@@ -61,7 +61,7 @@ func (q *Queries) CreateClient(ctx context.Context, arg CreateClientParams) (Cli
 }
 
 const generateBill = `-- name: GenerateBill :one
-INSERT INTO factura (fecha, cuenta, cliente) VALUES (NOW(), $1, $2)
+INSERT INTO factura (fecha, cuenta, cliente, total) VALUES (NOW(), $1, $2, (select total from cuenta where numCuenta = $1))
 RETURNING numfactura, fecha, cuenta, cliente
 `
 
