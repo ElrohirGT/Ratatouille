@@ -2,6 +2,7 @@ package waitress
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -41,7 +42,11 @@ func (m TakeOrderView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			onSuccess := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
 			onError := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
 
-			return components.CreateConfirmation("HELLO THERE", onConfirmation, onNegation, onSuccess, onError), nil
+			return components.CreateConfirmation(renderOrder(m.account, m.item, m.amount), 
+			onConfirmation, 
+			onNegation, 
+			onSuccess, 
+			onError), nil
 		}
 
 		newForm, cmds := m.forms.Update(msg)
@@ -91,4 +96,16 @@ func handleTakeOrder(account, item, amount string) tea.Cmd {
 		}
 	}
 
+}
+
+func renderOrder(account, item, amount string) string {
+	return fmt.Sprintf(`
+	NEW ORDER DETAILS
+	=============================
+	Account No: %s
+	Item: %s
+	Amount: %s units
+	=============================
+	CONFIRM?
+`, account, item, amount)	
 }
