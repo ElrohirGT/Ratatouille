@@ -92,7 +92,7 @@ func parseAccountsToTable(accounts []db.Cuentum) table.Model {
 		rows[i] = table.Row{
 			fmt.Sprint(account.Mesa),
 			fmt.Sprint(account.Numcuenta),
-			"$" + fmt.Sprint(account.Total)}
+			fmt.Sprint(account.Total)}
 	}
 
 	t := table.New(

@@ -31,24 +31,22 @@ func (m TakeOrderView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if newMsg.Type == tea.KeyEsc {
 			return CreateWaitressView(), nil
 		}
-		if newMsg.Type == tea.KeyEnter {
+		if newMsg.Type == tea.KeyEnter && m.forms.FocusIndex == len(m.forms.FormInputs) {
 			m.account = m.forms.FormInputs["NO.account"].Value
 			m.item = m.forms.FormInputs["ItemID"].Value
 			m.amount = m.forms.FormInputs["Amount"].Value
 
-			return m, handleTakeOrder(m.account, m.item, m.amount)
+			onConfirmation := func() tea.Cmd { return handleTakeOrder(m.account, m.item, m.amount) }
+			onNegation := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
+			onSuccess := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
+			onError := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
+
+			return components.CreateConfirmation("HELLO THERE", onConfirmation, onNegation, onSuccess, onError), nil
 		}
 
 		newForm, cmds := m.forms.Update(msg)
 		m.forms = newForm.(components.FormsModel)
 		return m, cmds
-
-	case global.ErrorDB:
-		m.errorMsg = newMsg.Description
-	case global.SuccesDB:
-		return components.CreateConfirmation("Do you confirm your order?",
-			func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil },
-			func() (tea.Model, tea.Cmd) { return CreateTakeOrder(), nil }), nil
 	}
 
 	return m, nil

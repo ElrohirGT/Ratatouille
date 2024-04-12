@@ -28,7 +28,7 @@ type Cuentum struct {
 	Numcuenta   int32
 	Estacerrada bool
 	Numpersonas int32
-	Total       float64
+	Total       string
 }
 
 type Empleado struct {
