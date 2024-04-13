@@ -163,9 +163,9 @@ INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1,
 SELECT 
 	IM.id,
 	P.fecha,
-	IM.nombre, 
+	IM.nombre as NombreDelItemMenu, 
 	P.cantidad,
-	EP.nombre
+	EP.nombre as EstadoDelPedido
 FROM pedido P
 	INNER JOIN estadosPedidos EP on P.estado = EP.id
 	INNER JOIN itemMenu IM on P.item = IM.id
