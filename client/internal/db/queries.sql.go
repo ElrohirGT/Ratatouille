@@ -758,7 +758,7 @@ func (q *Queries) RegisterComplaint(ctx context.Context, arg RegisterComplaintPa
 
 const setOrderDelivered = `-- name: SetOrderDelivered :exec
 UPDATE pedido p
-SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'Entregado')
+SET estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'Entregado')
 WHERE p.id = $1
 `
 
@@ -769,7 +769,7 @@ func (q *Queries) SetOrderDelivered(ctx context.Context, id int32) error {
 
 const setOrderPreparing = `-- name: SetOrderPreparing :exec
 UPDATE pedido as p
-SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
+SET estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
 WHERE p.id = $1
 `
 

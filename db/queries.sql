@@ -105,12 +105,12 @@ ORDER BY p.fecha DESC;
 
 -- name: SetOrderPreparing :exec
 UPDATE pedido as p
-SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
+SET estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
 WHERE p.id = $1;
 
 -- name: SetOrderDelivered :exec
 UPDATE pedido p
-SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'Entregado')
+SET estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'Entregado')
 WHERE p.id = $1;
 
 -- MESERO
@@ -172,6 +172,7 @@ FROM pedido P
 	inner join itemmenucategoria IMC on IM.categoria = IMC.id
 where (EP.nombre = 'Pedido' or EP.nombre = 'En preparación') and IM.categoria = 1 
 order by fecha asc;
+
 -- name: GetMenuItems :many
 SELECT im.*, imc.nombre as NombreCategoria
 FROM itemMenu im
