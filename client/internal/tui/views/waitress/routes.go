@@ -61,9 +61,19 @@ func CreateRegisterComplain() RegisterComplain {
 func CreateGenerateBill() GenerateBillView {
 	newForm := components.CreateForms("Generate Bill", map[string]components.FormsInput{
 		"Account": {Placeholder: "1,2,3..."},
-		"Client":     {Placeholder: "1,2,3..."},
+		"Client":  {Placeholder: "1,2,3..."},
 	})
 	return GenerateBillView{forms: newForm}
+}
+
+func CreateTakeSurvey() takeSurveyModel {
+	newForm := components.CreateForms("Take Survey", map[string]components.FormsInput{
+		"Employee": {Placeholder: "1,2,3..."},
+		"Client":  {Placeholder: "1,2,3..."},
+		"Kindness":  {Placeholder: "1,2,3..."},
+		"Speed":  {Placeholder: "1,2,3..."},
+	})
+	return takeSurveyModel{ forms: newForm}
 }
 
 func CreateGetClientsView() getClientsViewModel {
