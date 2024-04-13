@@ -46,9 +46,9 @@ func (m ChefViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			row := m.table.SelectedRow()
 			if row[4] == "Pedido" {
-				return m, handlePrepareDish(row[4])
+				return m, handlePrepareDish(row[0])
 			} else if row[4] == "En preparación" {
-				return m, handleFinishDish(row[4])
+				return m, handleFinishDish(row[0])
 			}
 
 		}
@@ -109,7 +109,7 @@ func handlePrepareDish(orderId string) tea.Cmd {
 	err = global.Driver.SetOrderPreparing(context.Background(), int32(v))
 	if err != nil {
 		return func() tea.Msg {
-			return global.ErrorDB{Description: "Error Setting orders"}
+			return global.ErrorDB{Description: err.Error()}
 		}
 	} else {
 		return HandleGetDishes()
@@ -155,9 +155,9 @@ func parseOrdersToTable(orders []db.GetPendingDishesRow) table.Model {
 		rows[i] = table.Row{
 			fmt.Sprint(order.ID),
 			order.Fecha.Format(time.Layout),
-			order.Nombre,
+			order.Nombredelitemmenu,
 			fmt.Sprint(order.Cantidad),
-			order.Nombre_2,
+			order.Estadodelpedido,
 		}
 	}
 

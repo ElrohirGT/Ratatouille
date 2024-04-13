@@ -496,22 +496,23 @@ const getPendingDishes = `-- name: GetPendingDishes :many
 SELECT 
 	IM.id,
 	P.fecha,
-	IM.nombre, 
+	IM.nombre as NombreDelItemMenu, 
 	P.cantidad,
-	EP.nombre
+	EP.nombre as EstadoDelPedido
 FROM pedido P
 	INNER JOIN estadosPedidos EP on P.estado = EP.id
 	INNER JOIN itemMenu IM on P.item = IM.id
 	inner join itemmenucategoria IMC on IM.categoria = IMC.id
-where (EP.nombre = 'En espera' or EP.nombre = 'Cocinado') and IM.categoria = 1
+where (EP.nombre = 'Pedido' or EP.nombre = 'En preparación') and IM.categoria = 1 
+order by fecha asc
 `
 
 type GetPendingDishesRow struct {
-	ID       int32
-	Fecha    time.Time
-	Nombre   string
-	Cantidad int32
-	Nombre_2 string
+	ID                int32
+	Fecha             time.Time
+	Nombredelitemmenu string
+	Cantidad          int32
+	Estadodelpedido   string
 }
 
 // CHEF --Get Pending Dishes
@@ -528,9 +529,9 @@ func (q *Queries) GetPendingDishes(ctx context.Context) ([]GetPendingDishesRow, 
 		if err := rows.Scan(
 			&i.ID,
 			&i.Fecha,
-			&i.Nombre,
+			&i.Nombredelitemmenu,
 			&i.Cantidad,
-			&i.Nombre_2,
+			&i.Estadodelpedido,
 		); err != nil {
 			return nil, err
 		}
