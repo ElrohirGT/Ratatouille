@@ -100,7 +100,7 @@ FROM pedido p
 	INNER JOIN itemMenuCategoria imc ON im.categoria = imc.id
 WHERE 
 	imc.nombre = 'Bebidas' 
-	AND ( e.nombre = 'Pedido' e.nombre = "En preparación" )
+	AND ( e.nombre = 'Pedido' AND e.nombre = "En preparación" )
 ORDER BY p.fecha DESC;
 
 -- name: SetOrderPreparing :exec
