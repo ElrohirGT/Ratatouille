@@ -109,7 +109,7 @@ create table pedido (
 create table factura(
 	numFactura serial primary key,
 	fecha timestamp not null,
-	cuenta int references cuenta(numCuenta) on delete cascade not null,
+	cuenta int unique references cuenta(numCuenta) on delete cascade not null,
 	cliente int references cliente(id) on delete cascade not null
 );
 
