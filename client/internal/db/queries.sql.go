@@ -503,7 +503,7 @@ FROM pedido P
 	INNER JOIN estadosPedidos EP on P.estado = EP.id
 	INNER JOIN itemMenu IM on P.item = IM.id
 	inner join itemmenucategoria IMC on IM.categoria = IMC.id
-where (EP.nombre = 'En espera' or EP.nombre = 'Cocinado') and IM.categoria = 1 
+where (EP.nombre = 'Pedido' or EP.nombre = 'En preparación') and IM.categoria = 1 
 order by fecha asc
 `
 
@@ -554,7 +554,7 @@ FROM pedido p
 	INNER JOIN itemMenuCategoria imc ON im.categoria = imc.id
 WHERE 
 	imc.nombre = 'Bebidas' 
-	AND e.nombre = 'Pedido'
+	AND ( e.nombre = 'Pedido' AND e.nombre = "En preparación" )
 ORDER BY p.fecha DESC
 `
 
