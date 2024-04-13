@@ -49,7 +49,7 @@ func (m getActiveAccountsModel) View() string {
 
 	b.WriteString("\n\n")
 
-	b.WriteString(styles.GetTitleStyle().Render("Clients"))
+	b.WriteString(styles.GetTitleStyle().Render("Active Accounts"))
 
 	b.WriteString("\n\n")
 

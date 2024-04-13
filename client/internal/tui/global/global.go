@@ -18,4 +18,9 @@ type SuccesDB struct {
 	Description string
 	Value       SuccessValue
 }
+
+type PaymentSuccess struct {
+	Amount float64
+}
+
 type SuccessValue interface{}
