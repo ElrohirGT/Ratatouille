@@ -6,7 +6,7 @@ import (
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/global"
-	"github.com/ElrohirGT/Ratatouille/internal/tui/views/waitress"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/views/auth"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -26,7 +26,7 @@ func main() {
 	// Driver Initialization
 	global.Driver = db.New(dbConnection)
 
-	p := tea.NewProgram(waitress.CreatePayBillView(1, 100))
+	p := tea.NewProgram(auth.CreateAuthView())
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("An Error happened: %v", err)
 		os.Exit(1)
