@@ -104,7 +104,7 @@ WHERE
 ORDER BY p.fecha DESC;
 
 -- name: SetOrderPreparing :exec
-UPDATE pedido p
+UPDATE pedido as p
 SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
 WHERE p.id = $1;
 

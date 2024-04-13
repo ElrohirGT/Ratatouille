@@ -503,7 +503,7 @@ FROM pedido P
 	INNER JOIN estadosPedidos EP on P.estado = EP.id
 	INNER JOIN itemMenu IM on P.item = IM.id
 	inner join itemmenucategoria IMC on IM.categoria = IMC.id
-where (EP.nombre = 'Pedido' or EP.nombre = 'En preparación') and IM.categoria = 1 
+where (EP.nombre = 'En espera' or EP.nombre = 'Cocinado') and IM.categoria = 1 
 order by fecha asc
 `
 
@@ -768,7 +768,7 @@ func (q *Queries) SetOrderDelivered(ctx context.Context, id int32) error {
 }
 
 const setOrderPreparing = `-- name: SetOrderPreparing :exec
-UPDATE pedido p
+UPDATE pedido as p
 SET p.estado = (SELECT ep.id FROM estadosPedidos ep WHERE nombre = 'En preparación')
 WHERE p.id = $1
 `
