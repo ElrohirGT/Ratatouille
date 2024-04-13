@@ -66,7 +66,7 @@ func (m takeSurveyModel) View() string {
 
 func handleTakeSurvey(employee, client, kindness, speed string) tea.Cmd {
 
-	if employee == "" || client == "" || kindness == "" || speed == ""{
+	if employee == "" || client == "" || kindness == "" || speed == "" {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Cannot have empty fields!"}
 		}
@@ -77,19 +77,19 @@ func handleTakeSurvey(employee, client, kindness, speed string) tea.Cmd {
 			return global.ErrorDB{Description: "All values must be Integers"}
 		}
 	}
-	
+
 	employeeConverted, _ := strconv.Atoi(employee)
 	clientConverted, _ := strconv.Atoi(client)
 	kindnessConverted, _ := strconv.Atoi(kindness)
 	speedConverted, _ := strconv.Atoi(speed)
-	
+
 	return func() tea.Msg {
 		err := global.Driver.TakeSurvey(context.Background(),
 			db.TakeSurveyParams{
-				Empleado: int32(employeeConverted), 
-				Cliente: int32(clientConverted), 
-				Gradoamabilidad: int32(kindnessConverted), 
-				Gradoexactitud: int32(speedConverted)})
+				Empleado:        int32(employeeConverted),
+				Cliente:         int32(clientConverted),
+				Gradoamabilidad: int32(kindnessConverted),
+				Gradoexactitud:  int32(speedConverted)})
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {
