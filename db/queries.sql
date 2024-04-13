@@ -142,8 +142,8 @@ SELECT * FROM cliente;
 SELECT * FROM empleado;
 
 -- name: GenerateBill :one
-INSERT INTO factura (fecha, cuenta, cliente, total) VALUES (NOW(), $1, $2, (select total from cuenta where numCuenta = $1))
-RETURNING *;
+INSERT INTO factura (fecha, cuenta, cliente) VALUES (NOW(), $1, $2)
+RETURNING *, (select total from cuenta where numCuenta = $1);
 
 -- name: GetClient :one
 SELECT * FROM cliente WHERE id=$1;

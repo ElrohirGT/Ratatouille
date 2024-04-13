@@ -39,8 +39,8 @@ func (m WaitressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return CreateGetClientsView(), handleGetClients()
 			case "getMenuItems":
 				return CreateGetMenuItems(), handleGetMenuItems()
-			case "generateBills":
-				return m, nil
+			case "generateBill":
+				return CreateGenerateBill(), nil
 			case "registerComplain":
 				return CreateRegisterComplain(), nil
 			}

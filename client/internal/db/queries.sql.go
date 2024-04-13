@@ -61,8 +61,8 @@ func (q *Queries) CreateClient(ctx context.Context, arg CreateClientParams) (Cli
 }
 
 const generateBill = `-- name: GenerateBill :one
-INSERT INTO factura (fecha, cuenta, cliente, total) VALUES (NOW(), $1, $2, (select total from cuenta where numCuenta = $1))
-RETURNING numfactura, fecha, cuenta, cliente
+INSERT INTO factura (fecha, cuenta, cliente) VALUES (NOW(), $1, $2)
+RETURNING numfactura, fecha, cuenta, cliente, (select total from cuenta where numCuenta = $1)
 `
 
 type GenerateBillParams struct {
@@ -70,14 +70,23 @@ type GenerateBillParams struct {
 	Cliente int32
 }
 
-func (q *Queries) GenerateBill(ctx context.Context, arg GenerateBillParams) (Factura, error) {
+type GenerateBillRow struct {
+	Numfactura int32
+	Fecha      time.Time
+	Cuenta     int32
+	Cliente    int32
+	Total      string
+}
+
+func (q *Queries) GenerateBill(ctx context.Context, arg GenerateBillParams) (GenerateBillRow, error) {
 	row := q.db.QueryRowContext(ctx, generateBill, arg.Cuenta, arg.Cliente)
-	var i Factura
+	var i GenerateBillRow
 	err := row.Scan(
 		&i.Numfactura,
 		&i.Fecha,
 		&i.Cuenta,
 		&i.Cliente,
+		&i.Total,
 	)
 	return i, err
 }

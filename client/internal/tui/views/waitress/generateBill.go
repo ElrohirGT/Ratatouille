@@ -46,10 +46,10 @@ func (m GenerateBillView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
 	case global.SuccesDB:
-		bill := newMsg.Value.(db.Factura)
+		bill := newMsg.Value.(db.GenerateBillRow)
 		client, _ := global.Driver.GetClient(context.Background(), bill.Cliente)
 
-		billText := renderBill(bill.Fecha.Format(time.Layout), m.account, client.Nombre, client.Nit)
+		billText := renderBill(bill.Fecha.Format(time.Layout), m.account, client.Nombre, client.Nit, bill.Total)
 
 		onConfirmation := func() (tea.Model, tea.Cmd) { return CreateWaitressView(), nil }
 
@@ -99,7 +99,7 @@ func handleGenerateBill(NoAccount, client string) tea.Cmd {
 
 }
 
-func renderBill(date, account, client, nit string) string {
+func renderBill(date, account, client, nit, total string) string {
 	return fmt.Sprintf(`
 	NEW BILL DETAILS
 	=============================
@@ -107,7 +107,8 @@ func renderBill(date, account, client, nit string) string {
 	Account: %s
 	Client: %s
 	NIT: %s
+	Total: $%s
 	=============================
 	
-`, date, account, client, nit)
+`, date, account, client, nit, total)
 }
