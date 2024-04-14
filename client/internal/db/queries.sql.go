@@ -225,18 +225,18 @@ const getComplaintsForDishBetween = `-- name: GetComplaintsForDishBetween :many
 
 SELECT cliente, gravedad, motivo, fecha, empleado, item
 FROM queja
-WHERE item = $1 AND fecha $2 AND $3
+WHERE item = $1 AND fecha BETWEEN $2 AND $3
 `
 
 type GetComplaintsForDishBetweenParams struct {
 	Item    sql.NullInt32
-	Column2 interface{}
-	Column3 interface{}
+	Fecha   time.Time
+	Fecha_2 time.Time
 }
 
 // 5. Reporte de las quejas agrupadas por plato para un rango de fechas solicitadas al usuario.
 func (q *Queries) GetComplaintsForDishBetween(ctx context.Context, arg GetComplaintsForDishBetweenParams) ([]Queja, error) {
-	rows, err := q.db.QueryContext(ctx, getComplaintsForDishBetween, arg.Item, arg.Column2, arg.Column3)
+	rows, err := q.db.QueryContext(ctx, getComplaintsForDishBetween, arg.Item, arg.Fecha, arg.Fecha_2)
 	if err != nil {
 		return nil, err
 	}

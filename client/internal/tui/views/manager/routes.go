@@ -20,7 +20,7 @@ func CreateManagerView() ManagerModel {
 }
 
 func CreateFamousDishView() famousDishesModel {
-	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
+	newForm := components.CreateForms("Famous Dishes", map[string]components.FormsInput{
 		"StartDate": {Placeholder: "YYYY-MM-DD"},
 		"EndDate":   {Placeholder: "YYYY-MM-DD"},
 	})
@@ -28,7 +28,7 @@ func CreateFamousDishView() famousDishesModel {
 }
 
 func CreatePeekHourView() peekHourModel {
-	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
+	newForm := components.CreateForms("Peek Hour", map[string]components.FormsInput{
 		"StartDate": {Placeholder: "YYYY-MM-DD"},
 		"EndDate":   {Placeholder: "YYYY-MM-DD"},
 	})
@@ -36,7 +36,7 @@ func CreatePeekHourView() peekHourModel {
 }
 
 func CreateAverageTimeToEatView() averageEatTimeModel {
-	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
+	newForm := components.CreateForms("Average Time To Eat", map[string]components.FormsInput{
 		"StartDate": {Placeholder: "YYYY-MM-DD"},
 		"EndDate":   {Placeholder: "YYYY-MM-DD"},
 	})
@@ -44,10 +44,19 @@ func CreateAverageTimeToEatView() averageEatTimeModel {
 }
 
 func CreateComplaintsByPersonView() complaintsByPersonModel {
-	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
+	newForm := components.CreateForms("Complaints", map[string]components.FormsInput{
 		"StartDate": {Placeholder: "YYYY-MM-DD"},
 		"EndDate":   {Placeholder: "YYYY-MM-DD"},
 		"Employee":  {Placeholder: "1,2,3..."},
 	})
 	return complaintsByPersonModel{forms: newForm}
+}
+
+func CreateComplaintsByItemView() complaintsByItemModel {
+	newForm := components.CreateForms("Complaints", map[string]components.FormsInput{
+		"StartDate": {Placeholder: "YYYY-MM-DD"},
+		"EndDate":   {Placeholder: "YYYY-MM-DD"},
+		"Item":   {Placeholder: "1,2,3..."},
+	})
+	return complaintsByItemModel{forms: newForm}
 }

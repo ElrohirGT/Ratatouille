@@ -56,7 +56,7 @@ WHERE empleado = $1 AND fecha BETWEEN $2 AND $3;
 -- name: GetComplaintsForDishBetween :many
 SELECT *
 FROM queja
-WHERE item = $1 AND fecha $2 AND $3;
+WHERE item = $1 AND fecha BETWEEN $2 AND $3;
 
 
 -- 6. Reporte de eficiencia de meseros mostrando los resultados de las encuestas, agrupado
