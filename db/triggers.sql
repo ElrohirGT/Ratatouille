@@ -2,22 +2,18 @@
 CREATE OR REPLACE FUNCTION order_pay_overflow_check()
 RETURNS trigger as
 $BODY$
-declare pays_exceeds_total boolean;
 begin
-		SELECT 
-		((SELECT SUM(monto) FROM pago WHERE factura = new.factura) + new.monto) 
+	if (SELECT SUM(monto) +new.monto FROM pago WHERE factura = new.factura) 
 		> (SELECT c.total 
 			FROM pago p 
 				INNER JOIN factura f ON p.factura = f.numFactura 
 				INNER JOIN cuenta c ON f.cuenta = c.numCuenta
-			WHERE p.factura = new.factura) 
-		INTO pays_exceeds_total;
+			WHERE p.factura = new.factura
+			LIMIT 1) then
+    raise exception 'El pago ha ingresar sobrepasa el monto por pagar de la cuenta.';
+	end if;
 
-    if pays_exceeds_total then
-        raise exception 'El pago ha ingresar sobrepasa el monto por pagar de la cuenta.';
-    end if;
-
-		RETURN new;
+	RETURN new;
 end
 $BODY$
 LANGUAGE 'plpgsql';
