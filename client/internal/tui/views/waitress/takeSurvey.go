@@ -45,7 +45,7 @@ func (m takeSurveyModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
 	case global.SuccesDB:
-		return m, nil
+		return CreateWaitressView(), nil
 	}
 
 	return m, cmds
