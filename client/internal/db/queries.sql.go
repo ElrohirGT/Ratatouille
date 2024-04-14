@@ -547,33 +547,26 @@ func (q *Queries) GetPendingDishes(ctx context.Context) ([]GetPendingDishesRow, 
 }
 
 const getPendingDrinks = `-- name: GetPendingDrinks :many
-SELECT p.id, fecha, estado, cantidad, cuenta, item, e.id, e.nombre, im.id, im.nombre, descripcion, preciounitario, categoria, imc.id, imc.nombre
-FROM pedido p
-	INNER JOIN estadosPedidos e ON p.estado = e.id
-	INNER JOIN itemMenu im ON p.item = im.id
-	INNER JOIN itemMenuCategoria imc ON im.categoria = imc.id
-WHERE 
-	imc.nombre = 'Bebidas' 
-	AND ( e.nombre = 'Pedido' AND e.nombre = "En preparación" )
-ORDER BY p.fecha DESC
+SELECT 
+	P.id,
+	P.fecha,
+	IM.nombre as NombreDelItemMenu, 
+	P.cantidad,
+	EP.nombre as EstadoDelPedido
+FROM pedido P
+	INNER JOIN estadosPedidos EP on P.estado = EP.id
+	INNER JOIN itemMenu IM on P.item = IM.id
+	inner join itemmenucategoria IMC on IM.categoria = IMC.id
+where (EP.nombre = 'Pedido' or EP.nombre = 'En preparación') and IM.categoria = 2
+order by fecha asc
 `
 
 type GetPendingDrinksRow struct {
-	ID             int32
-	Fecha          time.Time
-	Estado         int32
-	Cantidad       int32
-	Cuenta         int32
-	Item           int32
-	ID_2           int32
-	Nombre         string
-	ID_3           int32
-	Nombre_2       string
-	Descripcion    string
-	Preciounitario string
-	Categoria      int32
-	ID_4           int32
-	Nombre_3       string
+	ID                int32
+	Fecha             time.Time
+	Nombredelitemmenu string
+	Cantidad          int32
+	Estadodelpedido   string
 }
 
 // BARTENDER
@@ -589,19 +582,9 @@ func (q *Queries) GetPendingDrinks(ctx context.Context) ([]GetPendingDrinksRow, 
 		if err := rows.Scan(
 			&i.ID,
 			&i.Fecha,
-			&i.Estado,
+			&i.Nombredelitemmenu,
 			&i.Cantidad,
-			&i.Cuenta,
-			&i.Item,
-			&i.ID_2,
-			&i.Nombre,
-			&i.ID_3,
-			&i.Nombre_2,
-			&i.Descripcion,
-			&i.Preciounitario,
-			&i.Categoria,
-			&i.ID_4,
-			&i.Nombre_3,
+			&i.Estadodelpedido,
 		); err != nil {
 			return nil, err
 		}

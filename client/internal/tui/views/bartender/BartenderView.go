@@ -1,4 +1,4 @@
-package chef
+package bartender
 
 import (
 	"context"
@@ -19,18 +19,18 @@ var baseStyle = lipgloss.NewStyle().
 	BorderStyle(lipgloss.NormalBorder()).
 	BorderForeground(lipgloss.Color("240"))
 
-type ChefViewModel struct {
+type BartenderViewModel struct {
 	table    table.Model
 	errorMsg string
 }
 
-func CreateChefViewModel() ChefViewModel {
-	return ChefViewModel{table: table.New()}
+func CreateBartenderViewModel() BartenderViewModel {
+	return BartenderViewModel{table: table.New()}
 }
 
-func (m ChefViewModel) Init() tea.Cmd { return HandleGetDishes() }
+func (m BartenderViewModel) Init() tea.Cmd { return HandleGetDrinks() }
 
-func (m ChefViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m BartenderViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -47,9 +47,9 @@ func (m ChefViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			row := m.table.SelectedRow()
 			println(row[0])
 			if row[4] == "Pedido" {
-				return m, handlePrepareDish(row[0])
+				return m, handlePrepareDrinks(row[0])
 			} else if row[4] == "En preparación" {
-				return m, handleFinishDish(row[0])
+				return m, handleFinishDrink(row[0])
 			}
 
 		}
@@ -63,12 +63,12 @@ func (m ChefViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.table, cmd = m.table.Update(msg)
 	return m, cmd
 }
-func (m ChefViewModel) View() string {
+func (m BartenderViewModel) View() string {
 	var b strings.Builder
 
 	b.WriteString("\n\n")
 
-	b.WriteString(styles.GetTitleStyle().Render("Dishes"))
+	b.WriteString(styles.GetTitleStyle().Render("Drinks"))
 
 	b.WriteString("\n\n")
 
@@ -83,21 +83,21 @@ func (m ChefViewModel) View() string {
 	return b.String()
 }
 
-func HandleGetDishes() tea.Cmd {
-	orders, err := global.Driver.GetPendingDishes(context.Background())
+func HandleGetDrinks() tea.Cmd {
+	drinks, err := global.Driver.GetPendingDrinks(context.Background())
 	if err != nil {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Error retreiving clients"}
 		}
 	} else {
-		table := parseOrdersToTable(orders)
+		table := parseDrinksToTable(drinks)
 		return func() tea.Msg {
 			return table
 		}
 	}
 }
 
-func handlePrepareDish(orderId string) tea.Cmd {
+func handlePrepareDrinks(orderId string) tea.Cmd {
 
 	v, err := strconv.Atoi(orderId)
 
@@ -113,12 +113,12 @@ func handlePrepareDish(orderId string) tea.Cmd {
 			return global.ErrorDB{Description: err.Error()}
 		}
 	} else {
-		return HandleGetDishes()
+		return HandleGetDrinks()
 	}
 
 }
 
-func handleFinishDish(orderId string) tea.Cmd {
+func handleFinishDrink(orderId string) tea.Cmd {
 
 	v, err := strconv.Atoi(orderId)
 
@@ -134,12 +134,12 @@ func handleFinishDish(orderId string) tea.Cmd {
 			return global.ErrorDB{Description: "Error Setting orders"}
 		}
 	} else {
-		return HandleGetDishes()
+		return HandleGetDrinks()
 	}
 
 }
 
-func parseOrdersToTable(orders []db.GetPendingDishesRow) table.Model {
+func parseDrinksToTable(drinks []db.GetPendingDrinksRow) table.Model {
 	columns := []table.Column{
 		{Title: "ID", Width: 15},
 		{Title: "Date", Width: 30},
@@ -148,10 +148,10 @@ func parseOrdersToTable(orders []db.GetPendingDishesRow) table.Model {
 		{Title: "State", Width: 15},
 	}
 
-	rows := make([]table.Row, len(orders))
+	rows := make([]table.Row, len(drinks))
 
-	for i := range orders {
-		order := orders[i]
+	for i := range drinks {
+		order := drinks[i]
 		fmt.Println(string(order.ID))
 		rows[i] = table.Row{
 			fmt.Sprint(order.ID),
