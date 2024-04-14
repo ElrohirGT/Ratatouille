@@ -30,7 +30,7 @@ func (m ManagerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "MostFamousDish":
 				return CreateFamousDishView(), nil
 			case "PeekHour":
-				return m, nil
+				return CreatePeekHourView(), nil
 			case "AverageEatTime":
 				return m, nil
 			case "ComplaintsByPerson":

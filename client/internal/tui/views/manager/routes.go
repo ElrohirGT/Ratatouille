@@ -1,6 +1,9 @@
 package manager
 
-import "github.com/ElrohirGT/Ratatouille/internal/tui/components"
+import (
+	"github.com/ElrohirGT/Ratatouille/internal/db"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/components"
+)
 
 func CreateManagerView() ManagerModel {
 	menuItems := []components.MenuItem{
@@ -22,4 +25,12 @@ func CreateFamousDishView() famousDishesModel {
 		"EndDate":   {Placeholder: "YYYY-MM-DD"},
 	})
 	return famousDishesModel{forms: newForm}
+}
+
+func CreatePeekHourView() peekHourModel {
+	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
+		"StartDate": {Placeholder: "YYYY-MM-DD"},
+		"EndDate":   {Placeholder: "YYYY-MM-DD"},
+	})
+	return peekHourModel{forms: newForm, data: db.GetRushHourBetweenRow{}}
 }
