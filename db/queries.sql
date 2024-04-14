@@ -93,15 +93,18 @@ LIMIT 1;
 
 -- BARTENDER
 -- name: GetPendingDrinks :many
-SELECT *
-FROM pedido p
-	INNER JOIN estadosPedidos e ON p.estado = e.id
-	INNER JOIN itemMenu im ON p.item = im.id
-	INNER JOIN itemMenuCategoria imc ON im.categoria = imc.id
-WHERE 
-	imc.nombre = 'Bebidas' 
-	AND ( e.nombre = 'Pedido' AND e.nombre = "En preparación" )
-ORDER BY p.fecha DESC;
+SELECT 
+	P.id,
+	P.fecha,
+	IM.nombre as NombreDelItemMenu, 
+	P.cantidad,
+	EP.nombre as EstadoDelPedido
+FROM pedido P
+	INNER JOIN estadosPedidos EP on P.estado = EP.id
+	INNER JOIN itemMenu IM on P.item = IM.id
+	inner join itemmenucategoria IMC on IM.categoria = IMC.id
+where (EP.nombre = 'Pedido' or EP.nombre = 'En preparación') and IM.categoria = 2
+order by fecha asc;
 
 -- name: SetOrderPreparing :exec
 UPDATE pedido as p
