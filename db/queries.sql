@@ -161,7 +161,7 @@ INSERT INTO queja (cliente, gravedad, motivo, fecha, empleado, item) VALUES ($1,
 --Para platillos CHEF
 -- name: GetPendingDishes :many
 SELECT 
-	IM.id,
+	P.id,
 	P.fecha,
 	IM.nombre as NombreDelItemMenu, 
 	P.cantidad,
