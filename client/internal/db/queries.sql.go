@@ -494,7 +494,7 @@ func (q *Queries) GetMostFamousDishesBetween(ctx context.Context, arg GetMostFam
 
 const getPendingDishes = `-- name: GetPendingDishes :many
 SELECT 
-	IM.id,
+	P.id,
 	P.fecha,
 	IM.nombre as NombreDelItemMenu, 
 	P.cantidad,

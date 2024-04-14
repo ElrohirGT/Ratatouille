@@ -45,6 +45,7 @@ func (m ChefViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			row := m.table.SelectedRow()
+			println(row[0])
 			if row[4] == "Pedido" {
 				return m, handlePrepareDish(row[0])
 			} else if row[4] == "En preparación" {
