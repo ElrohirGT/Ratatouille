@@ -37,7 +37,7 @@ func (m famousDishesModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if newMsg.Type == tea.KeyEnter {
 			m.startDate = m.forms.FormInputs["StartDate"].Value
 			m.endDate = m.forms.FormInputs["EndDate"].Value
-			return m, handlePeekHour(m.startDate, m.endDate)
+			return m, handleFetchFamousDishes(m.startDate, m.endDate)
 		}
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
