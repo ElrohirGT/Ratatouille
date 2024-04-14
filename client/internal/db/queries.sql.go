@@ -315,14 +315,14 @@ const getEfficiencyReport = `-- name: GetEfficiencyReport :many
 SELECT 
 	en.empleado,
 	EXTRACT(MONTH from en.fecha) as mes,
-	AVG(e.gradoAmabilidad),
-	AVG(e.gradoExactitud) 
+	AVG(en.gradoAmabilidad),
+	AVG(en.gradoExactitud) 
 FROM encuesta en
 	INNER JOIN empleado em ON em.id = en.empleado
 	INNER JOIN puesto p ON em.puesto = p.id
 WHERE 
-	em.puesto = 'Mesero' AND
-	en.fecha BETWEEN NOW() AND NOW() - interval '6 months'
+	em.puesto = 1 AND
+	en.fecha >= (NOW() - interval '6 months')
 GROUP BY en.empleado, mes
 `
 

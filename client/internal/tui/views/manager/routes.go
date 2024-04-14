@@ -60,3 +60,7 @@ func CreateComplaintsByItemView() complaintsByItemModel {
 	})
 	return complaintsByItemModel{forms: newForm}
 }
+
+func CreateWaitressEfficiencyView() waitressEfficiency{
+	return waitressEfficiency{}
+}

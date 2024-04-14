@@ -38,7 +38,7 @@ func (m ManagerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "ComplaintsByDish":
 				return CreateComplaintsByItemView(), nil
 			case "WaitressEfficiency":
-				return m, nil
+				return CreateWaitressEfficiencyView(), handleFetchWaitressEfficienty()
 			}
 		}
 		newMenu, cmd := m.Menu.Update(msg)

@@ -40,7 +40,7 @@ SELECT
 	c.numPersonas,
 	AVERAGE(MAX(p.fecha) OVER (PARTITION BY c.numCuenta) - MIN(p.fecha) OVER (PARTITION by c.numCuenta)) as timeToEat
 FROM cuenta c
-	LEFT JOIN pedido p ON p.numCuenta = c.numCuenta
+	LEFT JOIN pedido p ON p.cuenta = c.numCuenta
 WHERE c.estaCerrada AND p.fecha BETWEEN $1 AND $2
 GROUP BY numPersonas;
 
@@ -68,14 +68,14 @@ WHERE item = $1 AND fecha BETWEEN $2 AND $3;
 SELECT 
 	en.empleado,
 	EXTRACT(MONTH from en.fecha) as mes,
-	AVG(e.gradoAmabilidad),
-	AVG(e.gradoExactitud) 
+	AVG(en.gradoAmabilidad),
+	AVG(en.gradoExactitud) 
 FROM encuesta en
 	INNER JOIN empleado em ON em.id = en.empleado
 	INNER JOIN puesto p ON em.puesto = p.id
 WHERE 
-	em.puesto = 'Mesero' AND
-	en.fecha BETWEEN NOW() AND NOW() - interval '6 months'
+	em.puesto = 1 AND
+	en.fecha >= (NOW() - interval '6 months')
 GROUP BY en.empleado, mes;
 
 -- name: SignIn :exec
