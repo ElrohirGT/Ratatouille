@@ -12,19 +12,19 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type peekHourModel struct {
+type averageEatTimeModel struct {
 	forms     components.FormsModel
-	data      db.GetRushHourBetweenRow
+	data      []db.GetAverageTimeToEatPerClientQuantityRow
 	startDate string
 	endDate   string
 	errorMsg  string
 }
 
-func (m peekHourModel) Init() tea.Cmd {
+func (m averageEatTimeModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m peekHourModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m averageEatTimeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	newForm, cmds := m.forms.Update(msg)
 	m.forms = newForm.(components.FormsModel)
@@ -37,27 +37,27 @@ func (m peekHourModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if newMsg.Type == tea.KeyEnter {
 			m.startDate = m.forms.FormInputs["StartDate"].Value
 			m.endDate = m.forms.FormInputs["EndDate"].Value
-			return m, handlePeekHour(m.startDate, m.endDate)
+			return m, handleFethAverageEatTime(m.startDate, m.endDate)
 		}
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
 	case global.SuccesDB:
 		response := newMsg.Value
-		m.data = response.(db.GetRushHourBetweenRow)
+		m.data = response.([]db.GetAverageTimeToEatPerClientQuantityRow)
 		return m, nil
 	}
 
 	return m, cmds
 }
 
-func (m peekHourModel) View() string {
+func (m averageEatTimeModel) View() string {
 
 	var b strings.Builder
 
 	b.WriteString(m.forms.View() + "\n\n")
 
-	if m.data.Horario != "" {
-		b.WriteString(printRushHourData(m.data))
+	if len(m.data) > 0 {
+		b.WriteString(printAverageEatTimeData(m.data))
 	}
 
 	if m.errorMsg != "" {
@@ -67,7 +67,7 @@ func (m peekHourModel) View() string {
 	return b.String()
 }
 
-func handlePeekHour(startDate, endDate string) tea.Cmd {
+func handleFethAverageEatTime(startDate, endDate string) tea.Cmd {
 
 	if startDate == "" || endDate == "" {
 		return func() tea.Msg {
@@ -85,8 +85,8 @@ func handlePeekHour(startDate, endDate string) tea.Cmd {
 	}
 
 	return func() tea.Msg {
-		v, err := global.Driver.GetRushHourBetween(context.Background(),
-			db.GetRushHourBetweenParams{Fecha: date1, Fecha_2: date2})
+		v, err := global.Driver.GetAverageTimeToEatPerClientQuantity(context.Background(),
+			db.GetAverageTimeToEatPerClientQuantityParams{Fecha: date1, Fecha_2: date2})
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {
@@ -95,13 +95,15 @@ func handlePeekHour(startDate, endDate string) tea.Cmd {
 	}
 }
 
-func printRushHourData(data db.GetRushHourBetweenRow) string {
+func printAverageEatTimeData(data []db.GetAverageTimeToEatPerClientQuantityRow) string {
 	var b strings.Builder
 
 	b.WriteString(
-		fmt.Sprintf("%-25s| %-15s|\n", "Schedule", "Orders Count"))
-	b.WriteString(
-		fmt.Sprintf("%-25s| %-15d|\n", data.Horario, data.Count))
+		fmt.Sprintf("%-15s| %-15s|\n", "Num People", "Avg Eat Time"))
+	for _, v := range data {
+		b.WriteString(
+			fmt.Sprintf("%-15d| %-15d|\n", v.Numpersonas, v.Timetoeat))
+	}
 
 	return b.String()
 }

@@ -2,7 +2,9 @@ package manager
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/ElrohirGT/Ratatouille/internal/db"
@@ -12,19 +14,20 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type peekHourModel struct {
+type complaintsByPersonModel struct {
 	forms     components.FormsModel
-	data      db.GetRushHourBetweenRow
+	data      []db.Queja
 	startDate string
 	endDate   string
+	employee  string
 	errorMsg  string
 }
 
-func (m peekHourModel) Init() tea.Cmd {
+func (m complaintsByPersonModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m peekHourModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m complaintsByPersonModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	newForm, cmds := m.forms.Update(msg)
 	m.forms = newForm.(components.FormsModel)
@@ -37,27 +40,28 @@ func (m peekHourModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if newMsg.Type == tea.KeyEnter {
 			m.startDate = m.forms.FormInputs["StartDate"].Value
 			m.endDate = m.forms.FormInputs["EndDate"].Value
-			return m, handlePeekHour(m.startDate, m.endDate)
+			m.employee = m.forms.FormInputs["Employee"].Value
+			return m, handleFetchComplainsByPerson(m.employee, m.startDate, m.endDate)
 		}
 	case global.ErrorDB:
 		m.errorMsg = newMsg.Description
 	case global.SuccesDB:
 		response := newMsg.Value
-		m.data = response.(db.GetRushHourBetweenRow)
+		m.data = response.([]db.Queja)
 		return m, nil
 	}
 
 	return m, cmds
 }
 
-func (m peekHourModel) View() string {
+func (m complaintsByPersonModel) View() string {
 
 	var b strings.Builder
 
 	b.WriteString(m.forms.View() + "\n\n")
 
-	if m.data.Horario != "" {
-		b.WriteString(printRushHourData(m.data))
+	if len(m.data) > 0 {
+		b.WriteString(printComplaintsByPersonData(m.data))
 	}
 
 	if m.errorMsg != "" {
@@ -67,9 +71,9 @@ func (m peekHourModel) View() string {
 	return b.String()
 }
 
-func handlePeekHour(startDate, endDate string) tea.Cmd {
+func handleFetchComplainsByPerson(employee, startDate, endDate string) tea.Cmd {
 
-	if startDate == "" || endDate == "" {
+	if startDate == "" || endDate == "" || employee == "" {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Cannot have empty fields!"}
 		}
@@ -77,16 +81,19 @@ func handlePeekHour(startDate, endDate string) tea.Cmd {
 
 	date1, err := global.ParseDate(startDate)
 	date2, err2 := global.ParseDate(endDate)
+	empleado, err3 := strconv.Atoi(employee)
 
-	if err != nil || err2 != nil {
+	if err != nil || err2 != nil || err3 != nil {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Not valid date format"}
 		}
 	}
 
 	return func() tea.Msg {
-		v, err := global.Driver.GetRushHourBetween(context.Background(),
-			db.GetRushHourBetweenParams{Fecha: date1, Fecha_2: date2})
+		v, err := global.Driver.GetComplaintsForEmployeeBetween(context.Background(),
+			db.GetComplaintsForEmployeeBetweenParams{
+				Empleado: sql.NullInt32{Int32: int32(empleado), Valid: true},
+				Fecha:    date1, Fecha_2: date2})
 		if err != nil {
 			return global.ErrorDB{Description: err.Error()}
 		} else {
@@ -95,13 +102,25 @@ func handlePeekHour(startDate, endDate string) tea.Cmd {
 	}
 }
 
-func printRushHourData(data db.GetRushHourBetweenRow) string {
+func printComplaintsByPersonData(data []db.Queja) string {
 	var b strings.Builder
 
 	b.WriteString(
-		fmt.Sprintf("%-25s| %-15s|\n", "Schedule", "Orders Count"))
-	b.WriteString(
-		fmt.Sprintf("%-25s| %-15d|\n", data.Horario, data.Count))
+		fmt.Sprintf("%-10s| %-10s| %-10s| %-10s| %s|\n",
+			"Client",
+			"Severity",
+			"Employee",
+			"Item",
+			"Reason"))
+	for _, v := range data {
+		b.WriteString(
+			fmt.Sprintf("%-10d| %-10d| %-10d| %-10d| %s\n",
+				v.Cliente,
+				v.Gravedad,
+				v.Empleado.Int32,
+				v.Item.Int32,
+				v.Motivo))
+	}
 
 	return b.String()
 }

@@ -34,3 +34,20 @@ func CreatePeekHourView() peekHourModel {
 	})
 	return peekHourModel{forms: newForm, data: db.GetRushHourBetweenRow{}}
 }
+
+func CreateAverageTimeToEatView() averageEatTimeModel {
+	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
+		"StartDate": {Placeholder: "YYYY-MM-DD"},
+		"EndDate":   {Placeholder: "YYYY-MM-DD"},
+	})
+	return averageEatTimeModel{forms: newForm}
+}
+
+func CreateComplaintsByPersonView() complaintsByPersonModel {
+	newForm := components.CreateForms("Log In", map[string]components.FormsInput{
+		"StartDate": {Placeholder: "YYYY-MM-DD"},
+		"EndDate":   {Placeholder: "YYYY-MM-DD"},
+		"Employee":  {Placeholder: "1,2,3..."},
+	})
+	return complaintsByPersonModel{forms: newForm}
+}
