@@ -132,7 +132,7 @@ SELECT
 	c.numPersonas,
 	AVERAGE(MAX(p.fecha) OVER (PARTITION BY c.numCuenta) - MIN(p.fecha) OVER (PARTITION by c.numCuenta)) as timeToEat
 FROM cuenta c
-	LEFT JOIN pedido p ON p.numCuenta = c.numCuenta
+	LEFT JOIN pedido p ON p.cuenta = c.numCuenta
 WHERE c.estaCerrada AND p.fecha BETWEEN $1 AND $2
 GROUP BY numPersonas
 `
