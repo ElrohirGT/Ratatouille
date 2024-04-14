@@ -52,7 +52,7 @@ func (m GenerateBillView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		amountToPay, _ := strconv.ParseFloat(bill.Total, 64)
 
 		onConfirmation := func() (tea.Model, tea.Cmd) {
-			return CreatePayBillView(bill.Numfactura, amountToPay), nil
+			return CreatePayBillView(bill.Cuenta, bill.Numfactura, amountToPay), nil
 		}
 
 		return components.CreateAlert(billText, onConfirmation), nil

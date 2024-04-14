@@ -21,6 +21,7 @@ var blurredButton = fmt.Sprintf("[ %s ]", styles.GetDeactivateStyle().Render("Pa
 
 type payBillModel struct {
 	noBill      int32
+	noAccount int32
 	amountToPay float64
 	optionFocus int
 
@@ -33,7 +34,7 @@ type payBillModel struct {
 	errorMsg   string
 }
 
-func CreatePayBillView(noBill int32, amountToPay float64) payBillModel {
+func CreatePayBillView(noAccount, noBill int32, amountToPay float64) payBillModel {
 
 	sliderOptions := []string{"Cash", "Credit Card", "Debit Card"}
 	moneyInput := textinput.New()
@@ -45,12 +46,18 @@ func CreatePayBillView(noBill int32, amountToPay float64) payBillModel {
 
 	return payBillModel{
 		noBill: noBill,
+		noAccount: noAccount,
 		amountToPay:   amountToPay,
 		sliderOptions: sliderOptions,
 		moneyInput:    moneyInput}
 }
 
 func (m payBillModel) Init() tea.Cmd {
+	if m.amountToPay <= 0 {
+		return func() tea.Msg {
+			return global.SuccesDB{Description: "Account closed"}
+		}
+	}
 	return m.moneyInput.Focus()
 }
 
@@ -103,12 +110,14 @@ func (m payBillModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case global.PaymentSuccess:
 		m.amountToPay -= newMsg.Amount
 		if m.amountToPay <= 0 {
-			onConfirmation := func() (tea.Model, tea.Cmd) { return CreateTakeSurvey(), nil }
-			return components.CreateAlert(
-				"Bill payed succesfully!",
-				onConfirmation), nil
+			return m, handleCloseAccount(m.noAccount)
 		}
 		return m, nil
+	case global.SuccesDB:
+		onConfirmation := func() (tea.Model, tea.Cmd) { return CreateTakeSurvey(), nil }
+		return components.CreateAlert(
+			"Bill payed succesfully!",
+			onConfirmation), nil
 	}
 
 	var cmd tea.Cmd
@@ -189,4 +198,17 @@ func handleAddPayment(noBill int32, amount string, paymentMethod string) tea.Cmd
 		}
 	}
 
+}
+
+func handleCloseAccount(account int32) tea.Cmd{
+	err := global.Driver.CloseAccount(context.Background(), account)
+	if err != nil {
+		return func() tea.Msg { 
+			return global.ErrorDB{Description: "Can't close account"}
+		}
+	} else {
+		return func() tea.Msg {
+			return global.SuccesDB{Description: "Account closed"}
+		}
+	}
 }
