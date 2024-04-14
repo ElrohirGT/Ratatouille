@@ -27,18 +27,18 @@ func (m ManagerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		if newMsg.Type == tea.KeyEnter {
 			switch m.Menu.SelectedItem.Route {
-			case "createClient":
-				return m ,nil
-			case "openAccount":
-				return m ,nil
-			case "takeOrder":
-				return m ,nil
-			case "getActiveAccounts":
-				return m ,nil
-			case "getClients":
-				return m ,nil
-			case "getMenuItems":
-				return m ,nil
+			case "MostFamousDish":
+				return CreateFamousDishView(), nil
+			case "PeekHour":
+				return m, nil
+			case "AverageEatTime":
+				return m, nil
+			case "ComplaintsByPerson":
+				return m, nil
+			case "ComplaintsByDish":
+				return m, nil
+			case "WaitressEfficiency":
+				return m, nil
 			}
 		}
 		newMenu, cmd := m.Menu.Update(msg)

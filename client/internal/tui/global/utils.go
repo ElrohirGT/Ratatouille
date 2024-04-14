@@ -1,6 +1,9 @@
 package global
 
-import "strconv"
+import (
+	"strconv"
+	"time"
+)
 
 func CanConvertToInt32(strings ...string) bool {
 	for _, str := range strings {
@@ -10,4 +13,9 @@ func CanConvertToInt32(strings ...string) bool {
 		}
 	}
 	return true
+}
+
+func ParseDate(dateString string) (time.Time, error) {
+	layout := "2006-1-2"
+	return time.Parse(layout, dateString)
 }

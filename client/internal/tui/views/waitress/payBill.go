@@ -21,7 +21,7 @@ var blurredButton = fmt.Sprintf("[ %s ]", styles.GetDeactivateStyle().Render("Pa
 
 type payBillModel struct {
 	noBill      int32
-	noAccount int32
+	noAccount   int32
 	amountToPay float64
 	optionFocus int
 
@@ -45,8 +45,8 @@ func CreatePayBillView(noAccount, noBill int32, amountToPay float64) payBillMode
 	moneyInput.Placeholder = "10.00"
 
 	return payBillModel{
-		noBill: noBill,
-		noAccount: noAccount,
+		noBill:        noBill,
+		noAccount:     noAccount,
 		amountToPay:   amountToPay,
 		sliderOptions: sliderOptions,
 		moneyInput:    moneyInput}
@@ -68,8 +68,8 @@ func (m payBillModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch newMsg.Type {
 		case tea.KeyUp, tea.KeyDown, tea.KeyEnter, tea.KeyLeft, tea.KeyRight:
 			if newMsg.Type == tea.KeyEnter && m.optionFocus == 2 {
-				return m, handleAddPayment( m.noBill,
-					m.moneyInput.Value(), 
+				return m, handleAddPayment(m.noBill,
+					m.moneyInput.Value(),
 					m.sliderOptions[m.sliderFocus])
 			}
 			if newMsg.Type == tea.KeyUp {
@@ -80,11 +80,11 @@ func (m payBillModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				newPointer := (m.optionFocus + 1) % 3
 				m.optionFocus = int(math.Abs(float64(newPointer)))
 			}
-			if newMsg.Type == tea.KeyLeft && m.optionFocus == 0{
+			if newMsg.Type == tea.KeyLeft && m.optionFocus == 0 {
 				newPointer := (m.sliderFocus - 1) % 3
 				m.sliderFocus = int(math.Abs(float64(newPointer)))
 			}
-			if newMsg.Type == tea.KeyRight && m.optionFocus == 0{
+			if newMsg.Type == tea.KeyRight && m.optionFocus == 0 {
 				newPointer := (m.sliderFocus + 1) % 3
 				m.sliderFocus = int(math.Abs(float64(newPointer)))
 			}
@@ -164,7 +164,7 @@ func (m payBillModel) View() string {
 func handleAddPayment(noBill int32, amount string, paymentMethod string) tea.Cmd {
 
 	amountConverted, err := strconv.ParseFloat(strings.TrimSpace(amount), 64)
-	
+
 	if amountConverted <= 0 {
 		return func() tea.Msg {
 			return global.ErrorDB{Description: "Amount most be different of zero"}
@@ -200,10 +200,10 @@ func handleAddPayment(noBill int32, amount string, paymentMethod string) tea.Cmd
 
 }
 
-func handleCloseAccount(account int32) tea.Cmd{
+func handleCloseAccount(account int32) tea.Cmd {
 	err := global.Driver.CloseAccount(context.Background(), account)
 	if err != nil {
-		return func() tea.Msg { 
+		return func() tea.Msg {
 			return global.ErrorDB{Description: "Can't close account"}
 		}
 	} else {
