@@ -10,6 +10,7 @@ import (
 	"github.com/ElrohirGT/Ratatouille/internal/tui/styles"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/views/bartender"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/views/chef"
+	"github.com/ElrohirGT/Ratatouille/internal/tui/views/manager"
 	"github.com/ElrohirGT/Ratatouille/internal/tui/views/waitress"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -51,7 +52,7 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "Bartender":
 			return bartender.CreateBartenderViewModel(), bartender.HandleGetDrinks()
 		case "Encargado":
-			return m, nil
+			return manager.CreateManagerView(), nil
 		}
 	}
 
