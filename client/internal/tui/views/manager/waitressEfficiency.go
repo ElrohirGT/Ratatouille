@@ -12,8 +12,8 @@ import (
 )
 
 type waitressEfficiency struct {
-	data      []db.GetEfficiencyReportRow
-	errorMsg  string
+	data     []db.GetEfficiencyReportRow
+	errorMsg string
 }
 
 func (m waitressEfficiency) Init() tea.Cmd {
@@ -72,19 +72,19 @@ func printWaitressEfficiency(data []db.GetEfficiencyReportRow) string {
 	var b strings.Builder
 
 	b.WriteString(
-		fmt.Sprintf("%-10s| %-10s| %-10s| %-10s|\n",
+		fmt.Sprintf("%-15s| %-15s| %-15s| %-15s|\n",
 			"Month",
 			"Employee",
-			"Avg",
-			"Avg_2"))
+			"AVG Kindness",
+			"AVG Precision"))
 	for _, v := range data {
 		b.WriteString(
-			fmt.Sprintf("%-10s| %-10d| %-10f| %-10f|\n",
+			fmt.Sprintf("%-15s| %-15d| %-15f| %-15f|\n",
 				v.Mes,
 				v.Empleado,
 				v.Avg,
 				v.Avg_2,
-				))
+			))
 	}
 
 	return b.String()
