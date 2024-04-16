@@ -108,6 +108,7 @@
 
               services.postgres = {
                 enable = true;
+                package = pkgs.postgresql_16;
                 listen_addresses = postgresHost;
                 port = postgresPort;
                 initialScript = dbInitFile;
