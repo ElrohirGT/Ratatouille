@@ -102,7 +102,7 @@ func printAverageEatTimeData(data []db.GetAverageTimeToEatPerClientQuantityRow) 
 		fmt.Sprintf("%-15s| %-15s|\n", "Num People", "Avg Eat Time"))
 	for _, v := range data {
 		b.WriteString(
-			fmt.Sprintf("%-15d| %-15d|\n", v.Numpersonas, v.Timetoeat))
+			fmt.Sprintf("%-15d| %-15f|\n", v.Numpersonas, v.Timetoeat))
 	}
 
 	return b.String()

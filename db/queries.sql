@@ -36,16 +36,13 @@ LIMIT 1;
 -- minutos, etc. entre un rango de fechas solicitadas al usuario.
 
 -- name: GetAverageTimeToEatPerClientQuantity :many
-SELECT
-	c.numPersonas,
-	AVG(
-		EXTRACT(EPOCH FROM 
+SELECT numPersonas, AVG(time) as timeToEat
+FROM (SELECT c.numPersonas, EXTRACT(EPOCH FROM 
 				(MAX(p.fecha) OVER (PARTITION BY c.numCuenta) - MIN(p.fecha) OVER (PARTITION by c.numCuenta))
-		)/60 -- Turns seconds to minutes
-	) as timeToEat
+		)/60 as time -- Turns seconds to minutes
 FROM cuenta c
 	LEFT JOIN pedido p ON p.cuenta = c.numCuenta
-WHERE c.estaCerrada AND p.fecha BETWEEN $1 AND $2
+WHERE c.estaCerrada AND p.fecha BETWEEN $1 AND $2) a
 GROUP BY numPersonas;
 
 -- 4. Reporte de las quejas agrupadas por persona para un rango de fechas solicitadas al usuario.
