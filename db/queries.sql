@@ -38,9 +38,9 @@ LIMIT 1;
 -- name: GetAverageTimeToEatPerClientQuantity :many
 SELECT
 	c.numPersonas,
-	AVERAGE(
+	AVG(
 		EXTRACT(EPOCH FROM 
-				MAX(p.fecha) OVER (PARTITION BY c.numCuenta) - MIN(p.fecha) OVER (PARTITION by c.numCuenta)
+				(MAX(p.fecha) OVER (PARTITION BY c.numCuenta) - MIN(p.fecha) OVER (PARTITION by c.numCuenta))
 		)/60 -- Turns seconds to minutes
 	) as timeToEat
 FROM cuenta c

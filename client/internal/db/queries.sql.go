@@ -130,9 +130,9 @@ const getAverageTimeToEatPerClientQuantity = `-- name: GetAverageTimeToEatPerCli
 
 SELECT
 	c.numPersonas,
-	AVERAGE(
+	AVG(
 		EXTRACT(EPOCH FROM 
-				MAX(p.fecha) OVER (PARTITION BY c.numCuenta) - MIN(p.fecha) OVER (PARTITION by c.numCuenta)
+				(MAX(p.fecha) OVER (PARTITION BY c.numCuenta) - MIN(p.fecha) OVER (PARTITION by c.numCuenta))
 		)/60 -- Turns seconds to minutes
 	) as timeToEat
 FROM cuenta c
@@ -148,7 +148,7 @@ type GetAverageTimeToEatPerClientQuantityParams struct {
 
 type GetAverageTimeToEatPerClientQuantityRow struct {
 	Numpersonas int32
-	Timetoeat   interface{}
+	Timetoeat   float64
 }
 
 // 3. Promedio de tiempo en que se tardan los clientes en comer, agrupando la cantidad de
